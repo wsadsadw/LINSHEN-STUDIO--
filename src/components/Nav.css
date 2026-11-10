@@ -1,0 +1,281 @@
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-nav);
+  transition:
+    background 0.5s var(--ease),
+    border-color 0.5s var(--ease),
+    box-shadow 0.6s var(--ease),
+    backdrop-filter 0.5s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+/* 滚过首屏后：毛玻璃 + 一条细线 + 一点投影，读起来像浮在内容之上的一层 */
+.nav.is-solid {
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  backdrop-filter: blur(20px) saturate(155%);
+  border-bottom-color: var(--line);
+  box-shadow: 0 18px 44px -26px rgba(0, 0, 0, 0.9);
+}
+
+.nav__inner {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  transition: height 0.5s var(--ease-out);
+}
+
+/* 悬浮状态下略微收窄，滚动时有一点「沉下去」的反馈 */
+.nav.is-solid .nav__inner {
+  height: 66px;
+}
+
+/* ── 品牌 ─────────────────────────────────────────────── */
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex: none;
+}
+
+.nav__mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0;
+  transition:
+    background 0.5s var(--ease),
+    color 0.5s var(--ease);
+}
+.nav__brand:hover .nav__mark {
+  background: var(--accent);
+  color: #0a0b0d;
+}
+
+.nav__names {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.nav__names b {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.nav__names i {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  color: var(--text-3);
+}
+
+/* ── 链接 ─────────────────────────────────────────────── */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  transition: color 0.4s var(--ease);
+}
+.nav__link span {
+  font-size: 13.5px;
+  color: var(--text-2);
+  transition: color 0.4s var(--ease);
+}
+.nav__link em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  color: transparent;
+  transition: color 0.4s var(--ease);
+}
+.nav__link:hover span,
+.nav__link.is-active span {
+  color: var(--text);
+}
+.nav__link:hover em,
+.nav__link.is-active em {
+  color: var(--accent);
+}
+
+/* 高亮小圆点 */
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translate(-50%, 4px) scale(0);
+  transition: transform 0.45s var(--ease-out);
+}
+.nav__link.is-active::after {
+  transform: translate(-50%, 0) scale(1);
+}
+
+.nav__cta {
+  flex: none;
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: none;
+}
+
+.nav__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  color: var(--text-3);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  transition: color 0.35s var(--ease);
+}
+.nav__lang i {
+  color: var(--line-3);
+  font-style: normal;
+}
+.nav__lang span.is-current,
+.nav__lang:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 1180px) {
+  .nav__links em {
+    display: none;
+  }
+  .nav__link {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav__links {
+    display: none;
+  }
+  .nav__actions {
+    gap: 12px;
+  }
+  .nav__cta {
+    padding-inline: 15px;
+  }
+}
+
+/* ── 手机（≤620px）────────────────────────────────────────
+   860px 这一档只藏了 .nav__links，品牌区和动作区没动。实测 390px 下：
+     品牌 282px（.nav__names b「LINSHEN.STUDIO」单独就占 235px）
+     + gap 32px + 动作区 185px = 499px，而版心只有 342px。
+   结果是 .nav__lang 溢出 37px、.nav__cta「预约拍摄」整体跑到视口外 133px ——
+   手机上最关键的转化入口直接看不见。
+   这里把预算压回 342px 以内：品牌收窄、副标题让位、动作区收紧。 */
+@media (max-width: 620px) {
+  .nav__inner {
+    gap: 12px;
+    height: 62px;
+  }
+  .nav.is-solid .nav__inner {
+    height: 58px;
+  }
+
+  .nav__brand {
+    gap: 9px;
+    min-width: 0; /* 允许在 flex 行里被压缩，否则 flex:none 会顶死不换行 */
+  }
+  .nav__mark {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  /* 副标题「PHOTOGRAPHER · 人像 / 婚礼 / 商业」实测 235px，
+     是这一行最宽的一块。留品牌名、弃副标题 —— 副标题在首屏和页脚都有。 */
+  .nav__names i {
+    display: none;
+  }
+  .nav__names b {
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+
+  .nav__actions {
+    gap: 8px;
+    min-width: 0;
+  }
+
+  /* 语言切换在手机上换成「中/EN」紧凑版，并撑到 44px 的触控高度 */
+  .nav__lang {
+    gap: 3px;
+    padding: 0 4px;
+    min-height: 44px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  /* 触控目标补到 44px 高（原 42px）；横向不再放宽，
+     否则又会把语言切换挤出屏幕 */
+  .nav__cta {
+    padding-inline: 13px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+}
+
+/* 极窄屏（≤360px）：再把品牌名和按钮各收一档，
+   保证 320px（iPhone SE 一代）也放得下。
+   注意 .nav__brand 是 flex:none，光缩字号没用 —— 得让它在横向可压缩，
+   否则品牌区宽度纹丝不动，挤出去的永远是右边那两件。 */
+@media (max-width: 360px) {
+  .nav__brand {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .nav__names {
+    min-width: 0;
+    overflow: hidden;
+  }
+  .nav__names b {
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav__cta {
+    padding-inline: 9px;
+    font-size: 11.5px;
+  }
+  .nav__actions {
+    gap: 5px;
+  }
+  .nav__inner {
+    gap: 8px;
+  }
+}

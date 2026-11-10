@@ -1,0 +1,234 @@
+/* ── 球面画廊容器 ──────────────────────────────────────────
+   球体半径是「容器尺寸 × fit」算出来的（fitBasis=auto 时，宽高比 ≥1.3 取宽度），
+   所以高度必须给足——给矮了球体会被容器裁掉大半，只剩中间一小块。
+   官方 demo 的容器是整屏 100vh，这里给到 92vh 贴近它，
+   同时留一点余量给板块自己的标题与底部文案。
+   宽度铺满视口：套进 1700px 版心会丢掉沉浸感。 */
+.works__dome {
+  position: relative;
+  width: 100%;
+  height: clamp(640px, 92vh, 1040px);
+  margin-top: clamp(40px, 4vw, 72px);
+}
+
+/* ── 以下为旧版「4 张卡片 7/5 交错网格」的样式，已停用 ──────
+   Works 板块改用 DomeGallery 球面画廊后，.works__grid / .work* /
+   .work__link 都不再被渲染。保留是为了万一想退回卡片版时不用重写。 */
+.works__grid {
+  margin-top: clamp(52px, 5.5vw, 88px);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(22px, 2.2vw, 38px);
+}
+
+/* 7 / 5、5 / 7 交错 —— 两张大卡一行，行高一致 */
+.work--wide {
+  grid-column: span 7;
+}
+.work--narrow {
+  grid-column: span 5;
+}
+
+.work {
+  position: relative; /* 拉伸链接的定位锚点 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── 拉伸链接（stretched link）─────────────────────────────
+   此前卡片 hover 会浮出「查看同类型拍摄 →」的 CTA，整卡却没有任何链接——
+   看得见、点不动。而 .work__media 上早就写着 cursor: pointer，说明整卡可点
+   本就是设计意图，只是链接一直没接上。
+   做法：链接文本是作品标题（读屏用户听到「林间的仪式 · 查看同类型拍摄」），
+   伪元素再把点击区撑满整张卡——这样不必把一大坨 DOM 塞进 <a>，语义也正确。 */
+.work__link {
+  color: inherit;
+  text-decoration: none;
+}
+.work__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-click); /* 压过 .work__veil / .work__idx 等装饰层，否则点不到 */
+}
+
+.work__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--bg-raise);
+  height: clamp(380px, 34vw, 655px);
+  cursor: pointer;
+  transition: transform 0.35s var(--ease-out);
+}
+.work__media:active {
+  transform: scale(0.994);
+  transition-duration: 90ms;
+}
+
+.work__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.88) contrast(1.05) brightness(0.86);
+  transition:
+    transform 1.5s var(--ease-out),
+    filter 0.9s var(--ease);
+}
+
+.work:hover .work__media img {
+  transform: scale(1.055);
+  filter: saturate(1) contrast(1.03) brightness(0.98);
+}
+
+/* 静止时压一圈暗角，hover 时抬起来 */
+.work__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(8, 9, 11, 0.78) 0%, rgba(8, 9, 11, 0.12) 44%, transparent 72%),
+    linear-gradient(to bottom, rgba(8, 9, 11, 0.34), transparent 34%);
+  transition: opacity 0.9s var(--ease);
+}
+.work:hover .work__veil {
+  opacity: 0.68;
+}
+
+/* 角标编号：外面套一层取景框线 */
+.work__idx {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-sm);
+  background: rgba(8, 9, 11, 0.5);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  font-size: 10.5px !important;
+  transition:
+    border-color 0.6s var(--ease),
+    color 0.6s var(--ease);
+}
+.work:hover .work__idx {
+  border-color: var(--accent-line);
+  color: var(--accent);
+}
+
+.work__hover {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.8s var(--ease-out);
+}
+.work:hover .work__hover {
+  opacity: 1;
+  transform: none;
+}
+
+.work__note {
+  color: var(--text-2);
+  font-size: 10.5px !important;
+  letter-spacing: 0.16em !important;
+}
+
+.work__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 9px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-line);
+  background: rgba(201, 168, 124, 0.1);
+  color: var(--accent);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+/* ── 卡片下方信息 ─────────────────────────────────────── */
+.work__meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 2px;
+}
+
+.work__title {
+  font-size: clamp(19px, 1.35vw, 24px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  transition: color 0.5s var(--ease);
+}
+.work:hover .work__title {
+  color: var(--accent);
+}
+
+.work__tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 9px;
+  color: var(--text-3);
+  font-size: 10.5px !important;
+  letter-spacing: 0.16em !important;
+}
+.work__tags i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--line-3);
+}
+
+.work__year {
+  color: var(--text-3);
+  padding-top: 4px;
+}
+
+/* ── 尾部说明 ─────────────────────────────────────────── */
+.works__foot {
+  margin-top: clamp(46px, 5vw, 78px);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.works__foot-text {
+  font-size: 14.5px;
+  color: var(--text-3);
+}
+
+.works__foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 6px;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent-line);
+  padding-bottom: 2px;
+  transition: gap 0.4s var(--ease-out);
+}
+.works__foot-link:hover {
+  gap: 12px;
+}
+
+@media (max-width: 1080px) {
+  .work--wide,
+  .work--narrow {
+    grid-column: span 12;
+  }
+  .work__media {
+    height: clamp(280px, 46vw, 460px);
+  }
+}

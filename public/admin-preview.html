@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>后台管理 · 效果预览</title>
+<style>
+  :root{
+    --bg:#0a0c0f; --panel:#101318; --raise:#161a21; --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+    --text:#e9ecf1; --dim:#8b93a0; --dim2:#5d656f; --accent:#c9a87c; --accent-soft:rgba(201,168,124,.12);
+    --sans:'Inter','Microsoft YaHei UI','PingFang SC',system-ui,sans-serif;
+    --mono:ui-monospace,'Cascadia Mono',Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;height:100vh;overflow:hidden}
+  .app{display:grid;grid-template-columns:250px 1fr;grid-template-rows:60px 1fr;height:100vh}
+
+  /* 顶栏 */
+  .top{grid-column:1/3;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand i{width:30px;height:30px;border:1px solid rgba(201,168,124,.45);border-radius:50%;display:grid;place-items:center;color:var(--accent);font-style:normal;font-size:13px;font-weight:600}
+  .brand b{font-size:14.5px;font-weight:600;letter-spacing:.02em}
+  .brand span{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--dim2);display:block}
+  .top-right{display:flex;align-items:center;gap:14px}
+  .status{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim2)}
+  .status em{font-style:normal;color:#7ddc9a}
+  .save{height:38px;padding:0 22px;border:0;border-radius:8px;background:var(--accent);color:#0a0b0d;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+  .preview{height:38px;padding:0 18px;border:1px solid var(--line2);border-radius:8px;background:transparent;color:var(--text);font:inherit;font-size:13.5px;cursor:pointer}
+
+  /* 侧栏 */
+  .side{border-right:1px solid var(--line);background:var(--panel);padding:18px 12px;overflow:auto}
+  .side h4{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--dim2);padding:14px 12px 8px;font-weight:500}
+  .side a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:7px;color:var(--dim);text-decoration:none;font-size:13.5px;margin-bottom:2px}
+  .side a.on{background:var(--accent-soft);color:var(--text)}
+  .side a.on em{color:var(--accent)}
+  .side a em{font-style:normal;font-family:var(--mono);font-size:9px;color:var(--dim2);margin-left:auto;letter-spacing:.14em}
+
+  /* 主区 */
+  .main{overflow:auto;padding:30px 38px 60px}
+  .head{margin-bottom:26px}
+  .head h1{font-size:23px;font-weight:600;letter-spacing:-.01em}
+  .head p{color:var(--dim);font-size:13px;margin-top:7px}
+
+  .card{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:24px 26px;margin-bottom:18px}
+  .card h3{font-size:14px;font-weight:500;margin-bottom:4px}
+  .card .hint{font-size:12.5px;color:var(--dim2);margin-bottom:18px}
+
+  .field{margin-bottom:16px}
+  .field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim2);margin-bottom:7px}
+  .field input,.field textarea{width:100%;padding:11px 14px;border:1px solid var(--line2);border-radius:8px;background:var(--raise);color:var(--text);font:inherit;font-size:14px}
+  .field textarea{resize:vertical;min-height:74px;line-height:1.7}
+  .field .sub{font-size:11.5px;color:var(--dim2);margin-top:6px}
+
+  /* 作品网格 */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .item{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--raise)}
+  .item .thumb{position:relative;aspect-ratio:16/10;background:#000;overflow:hidden}
+  .item .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .item .thumb .num{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:10px;padding:4px 8px;border-radius:5px;background:rgba(0,0,0,.6);border:1px solid var(--line2)}
+  .item .thumb .acts{position:absolute;top:10px;right:10px;display:flex;gap:6px;opacity:.9}
+  .item .thumb .acts button{font-family:var(--mono);font-size:10px;padding:5px 9px;border-radius:5px;background:rgba(0,0,0,.65);border:1px solid var(--line2);color:#fff;cursor:pointer}
+  .item .thumb .acts button.del:hover{border-color:#d9736b;color:#d9736b}
+  .item .meta{padding:13px 14px}
+  .item .meta input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--text);font:inherit;font-size:13.5px;margin-bottom:7px}
+  .item .meta input.small{font-size:12.5px;color:var(--dim)}
+
+  /* 上传区 */
+  .drop{border:1px dashed var(--line2);border-radius:10px;padding:26px;text-align:center;color:var(--dim);margin-bottom:20px;background:rgba(255,255,255,.012)}
+  .drop b{display:block;color:var(--text);font-weight:500;margin-bottom:6px;font-size:14px}
+  .drop span{font-size:12.5px;color:var(--dim2)}
+
+  /* 缩略图小网格 */
+  .mini{display:grid;grid-template-columns:repeat(8,1fr);gap:9px}
+  .mini div{position:relative;aspect-ratio:1;border-radius:7px;overflow:hidden;border:1px solid var(--line)}
+  .mini img{width:100%;height:100%;object-fit:cover;display:block}
+  .mini .x{position:absolute;top:4px;right:4px;width:17px;height:17px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid var(--line2);color:#fff;font-size:11px;line-height:15px;text-align:center;cursor:pointer}
+  .mini .add{display:grid;place-items:center;border:1px dashed var(--line2);color:var(--dim2);font-size:22px;cursor:pointer}
+
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+  .pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--accent);border:1px solid rgba(201,168,124,.4);padding:5px 11px;border-radius:999px;margin-bottom:16px}
+
+  [data-tab]{display:none}
+  [data-tab].show{display:block}
+  .note{margin-top:34px;padding:16px 18px;border-left:2px solid var(--accent);background:rgba(201,168,124,.06);border-radius:0 8px 8px 0;font-size:13px;color:var(--dim);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">
+      <i>L</i>
+      <div>
+        <b>LINSHEN.STUDIO · 内容管理</b>
+        <span>PHOTOGRAPHER · 人像 / 婚礼 / 商业</span>
+      </div>
+    </div>
+    <div class="top-right">
+      <span class="status">已保存 · <em>刚刚</em></span>
+      <button class="preview">预览网站 ↗</button>
+      <button class="save">保存并发布</button>
+    </div>
+  </div>
+
+  <nav class="side">
+    <h4>内容</h4>
+    <a href="#hero" class="on">首屏<em>HERO</em></a>
+    <a href="#works">精选作品<em>WORK</em></a>
+    <a href="#about">关于我<em>ABOUT</em></a>
+    <a href="#edge">个人优势<em>EDGE</em></a>
+    <a href="#contact">联系方式<em>CONTACT</em></a>
+    <h4>设置</h4>
+    <a href="#site">网站设置<em>SITE</em></a>
+  </nav>
+
+  <main class="main">
+
+    <!-- 首屏 -->
+    <section data-tab="hero" class="show">
+      <div class="head"><h1>首屏</h1><p>打开网站第一眼看到的那一屏。左边是文字，右边是环绕字标的照片。</p></div>
+      <div class="card">
+        <span class="pill">文字</span>
+        <div class="field"><label>大字标</label><input value="LINSHEN.STUDIO" /></div>
+        <div class="row2">
+          <div class="field"><label>右上角小字</label><input value="EST. 2014 / NANCHANG" /></div>
+          <div class="field"><label>字标下方一行</label><input value="PHOTOGRAPHY · 婚礼纪实 / 人像 / 商业" /></div>
+        </div>
+        <div class="field"><label>服务标题</label><input value="婚礼纪实 / 人像写真 · 商业影像" /><div class="sub">用 / 分隔会在页面上分成两行显示</div></div>
+        <div class="field"><label>简介</label><textarea>一台相机，跟完整场仪式。不摆拍、不喊口令，只管把你没注意到的那些瞬间留下来。</textarea></div>
+      </div>
+      <div class="card">
+        <span class="pill">环绕字标的照片 · 12 张</span>
+        <h3>拖动能换顺序，右上角 × 删除</h3>
+        <p class="hint">照片越多，首屏那圈缠绕越细密。建议 24–30 张。</p>
+        <div class="mini">
+          <div><img src="/images/reel-01.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-02.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-03.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-04.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-05.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-06.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-07.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-08.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-09.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-10.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-11.jpg"><span class="x">×</span></div>
+          <div><img src="/images/reel-12.jpg"><span class="x">×</span></div>
+          <div class="add">＋</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 作品 -->
+    <section data-tab="works">
+      <div class="head"><h1>精选作品</h1><p>首页往下第二屏那四张大卡片。</p></div>
+      <div class="drop">
+        <b>把照片拖到这里上传</b>
+        <span>支持 JPG / PNG / HEIC · 会自动裁切压缩成合适尺寸</span>
+      </div>
+      <div class="grid">
+        <div class="item">
+          <div class="thumb"><img src="/images/work-01.jpg"><span class="num">01</span>
+            <span class="acts"><button>替换</button><button class="del">删除</button></span></div>
+          <div class="meta">
+            <input value="林间的仪式" />
+            <input class="small" value="婚礼纪实 · 杭州 · 千岛湖 · 2025" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="thumb"><img src="/images/work-02.jpg"><span class="num">02</span>
+            <span class="acts"><button>替换</button><button class="del">删除</button></span></div>
+          <div class="meta">
+            <input value="出发前的十分钟" />
+            <input class="small" value="纪实摄影 · 南昌 · 老城 · 2024" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="thumb"><img src="/images/work-03.jpg"><span class="num">03</span>
+            <span class="acts"><button>替换</button><button class="del">删除</button></span></div>
+          <div class="meta">
+            <input value="烛光下的誓言" />
+            <input class="small" value="婚礼纪实 · 上海 · 徐汇 · 2024" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="thumb"><img src="/images/work-04.jpg"><span class="num">04</span>
+            <span class="acts"><button>替换</button><button class="del">删除</button></span></div>
+          <div class="meta">
+            <input value="掌心的纹样" />
+            <input class="small" value="细节与人像 · 深圳 · 南山 · 2023" />
+          </div>
+        </div>
+      </div>
+      <button class="preview" style="margin-top:16px">＋ 添加一个作品</button>
+    </section>
+
+    <!-- 关于我 -->
+    <section data-tab="about">
+      <div class="head"><h1>关于我</h1><p>个人经历那个模块：人物照、介绍、数据、时间线。</p></div>
+      <div class="card">
+        <span class="pill">人物照</span>
+        <div class="row2">
+          <div class="thumb" style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+            <img src="/images/about-portrait.jpg" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block">
+          </div>
+          <div>
+            <button class="preview">更换照片</button>
+            <p class="hint" style="margin-top:14px">建议竖构图。上传后会自动裁成 4:5。</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="pill">介绍文字</span>
+        <div class="field"><label>标题</label><input value="十二年，只做一件事" /></div>
+        <div class="field"><label>第一段</label><textarea>2014 年，我辞掉设计院的工作，用攒下的钱买了第一台全画幅相机……</textarea></div>
+        <div class="field"><label>第二段</label><textarea>十二年过去，我依然只做这一件事：在你最放松、最不设防的那个瞬间按下快门……</textarea></div>
+      </div>
+      <div class="card">
+        <span class="pill">项目数据</span>
+        <div class="row2">
+          <div class="field"><label>数字</label><input value="12" /><div class="sub">后缀：年</div></div>
+          <div class="field"><label>说明</label><input value="独立拍摄经验" /></div>
+          <div class="field"><label>数字</label><input value="860" /><div class="sub">后缀：+</div></div>
+          <div class="field"><label>说明</label><input value="完成的拍摄场次" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 优势 -->
+    <section data-tab="edge">
+      <div class="head"><h1>个人优势</h1><p>六张能力卡片，标题和说明都能改。</p></div>
+      <div class="card">
+        <span class="pill">第 1 张</span>
+        <div class="field"><label>标题</label><input value="十二年的现场经验" /></div>
+        <div class="field"><label>说明</label><textarea>860 多场拍摄，见过暴雨里的户外仪式、停电的宴会厅……</textarea></div>
+      </div>
+      <div class="card"><span class="pill">第 2 张</span>
+        <div class="field"><label>标题</label><input value="全程双机位，必带备用" /></div>
+        <div class="field"><label>说明</label><textarea>两台机身、四支镜头、双份存储卡……</textarea></div>
+      </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section data-tab="contact">
+      <div class="head"><h1>联系方式</h1><p>改一次，全站同步更新（不用再改两个地方）。</p></div>
+      <div class="card">
+        <span class="pill">联系方式</span>
+        <div class="row2">
+          <div class="field"><label>电话</label><input value="183 7937 8173" /></div>
+          <div class="field"><label>邮箱</label><input value="276238371@qq.com" /></div>
+        </div>
+        <div class="field"><label>微信号（选填，留空则不显示）</label><input value="" placeholder="留空就不显示" /></div>
+        <div class="field"><label>接待时间</label><input value="接待时间 10:00 – 20:00 · 全年无休" /></div>
+      </div>
+      <div class="card">
+        <span class="pill">微信二维码</span>
+        <div class="row2">
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;width:150px">
+            <img src="/images/wechat-qr.png" style="width:100%;display:block;border-radius:4px">
+          </div>
+          <div>
+            <button class="preview">更换二维码</button>
+            <p class="hint" style="margin-top:14px">上传新的加好友二维码即可。头像和昵称会被自动裁掉，只留二维码本体。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 设置 -->
+    <section data-tab="site">
+      <div class="head"><h1>网站设置</h1><p>整站通用的信息。</p></div>
+      <div class="card">
+        <div class="row2">
+          <div class="field"><label>品牌名（第一行）</label><input value="LINSHEN.STUDIO" /></div>
+          <div class="field"><label>副标题（第二行）</label><input value="PHOTOGRAPHER · 人像 / 婚礼 / 商业" /></div>
+        </div>
+        <div class="field"><label>导航栏徽标字母</label><input value="L" /></div>
+        <div class="field"><label>备案号</label><input value="赣ICP备 00000000 号" /></div>
+        <div class="field"><label>页脚版权</label><input value="© 2026 LINSHEN.STUDIO" /></div>
+      </div>
+      <div class="card">
+        <span class="pill">旧版首页</span>
+        <p class="hint" style="margin:0">工程里还留着一版「视频背景」的旧首屏，没有被引用。需要的话可以从这里一键切回去。</p>
+      </div>
+    </section>
+
+    <div class="note">
+      这是**效果预览**，用来让你先看到后台长什么样、能改哪些东西。<br>
+      上面每一个输入框、每一个按钮的样子都是按真实要做的来画的——但现在是死的，点了不会真的保存。<br>
+      你觉得可以，我就把它做成真的。
+    </div>
+  </main>
+</div>
+
+<script>
+  const links = [...document.querySelectorAll('.side a')];
+  const show = hash => {
+    const key = (hash || '#hero').slice(1);
+    document.querySelectorAll('[data-tab]').forEach(s => s.classList.toggle('show', s.dataset.tab === key));
+    links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + key));
+  };
+  links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); location.hash = a.getAttribute('href'); }));
+  addEventListener('hashchange', () => show(location.hash));
+  show(location.hash);
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+/* 背景音乐开关 —— 导航栏右上角，插在「中/EN」左边。
+   刻意沿用品牌左侧那个圆形标记的视觉语汇（同样是 --accent-line 描边），
+   不往导航栏里引入任何新的形状或颜色，这也是当初选样式 A 的原因。 */
+
+/* 音频元素本身不参与排版。
+   display:none 不影响播放（audio 与 video 不同，video 隐藏后可能不渲染帧）。 */
+.music-src {
+  display: none;
+}
+
+.music-btn {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-2);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition:
+    border-color 0.45s var(--ease),
+    color 0.45s var(--ease),
+    background 0.45s var(--ease);
+}
+
+.music-btn svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+}
+
+/* 播放三角的视觉重心偏右，往左推一点点才是光学居中 */
+.music-btn[aria-pressed='false'] svg {
+  transform: translateX(0.7px);
+}
+
+.music-btn:hover,
+.music-btn.is-playing {
+  border-color: var(--accent-line);
+  color: var(--accent);
+}
+.music-btn:hover {
+  background: var(--accent-soft);
+}
+
+/* 焦点环不用在这里写：base.css 已有全局 :focus-visible
+   （outline: 1px solid var(--accent); outline-offset: 3px） */
+
+/* 窄屏导航本来就挤（品牌 + 六个链接 + 语言 + CTA），这里同步收小，
+   不额外多占横向空间 */
+@media (max-width: 1080px) {
+  .music-btn {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 860px) {
+  /* 这一档 .nav__links 会整块隐藏，横向反而宽松，但按钮跟着缩一档更协调 */
+  .music-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .music-btn svg {
+    width: 11px;
+    height: 11px;
+  }
+}

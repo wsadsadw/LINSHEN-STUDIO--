@@ -1,0 +1,332 @@
+.about__main {
+  margin-top: clamp(56px, 6vw, 96px);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 92px);
+  align-items: start;
+}
+
+/* ── 人物图 ───────────────────────────────────────────── */
+.about__portrait {
+  position: sticky;
+  top: 108px;
+}
+
+.about__frame {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--bg-raise);
+  /* 让整张卡片（含这圈 1px 边框）在上下边缘一起淡出。
+     否则 ::after 的渐变只能作用到图片，边框在它之外——
+     照片渐变沉到背景色后，边框会在最外圈又画出一道亮线把过渡截断。
+     渐隐区取 13%，正好覆盖上下各约 12.4% 的补边。 */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 13%,
+    #000 87%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
+}
+.about__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* 上下双向渐隐。
+     图片是 3:4、画面本体是 1:1，上下各留了约 12.4% 的补边——
+     补边取自画面边缘像素（拉伸而来），本身颜色已跟画面接得上，
+     这层渐变再把它压向背景色，于是读到的是「背景 → 补边 → 画面」的连续过渡，
+     而不是贴了一条硬边。中段（13.5%–52%）留全透明，不压画面。
+     底部保留原有的暗角意图（原设计是 to top 的 0.55 渐变）。 */
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 9, 11, 1) 0%,
+    rgba(8, 9, 11, 0.4) 7%,
+    rgba(8, 9, 11, 0) 13.5%,
+    rgba(8, 9, 11, 0) 52%,
+    rgba(8, 9, 11, 0.55) 87%,
+    rgba(8, 9, 11, 0.85) 96%,
+    rgba(8, 9, 11, 1) 100%
+  );
+  pointer-events: none;
+}
+.about__frame img {
+  width: 100%;
+  /* 3:4 —— 与人物海报本身的比例一致（原为 4:5）。
+     两者一致时 object-fit: cover 不再产生任何裁切，也就不需要靠补边凑比例
+     （补边会在容器里露出上下黑框，这个坑踩过一次）。 */
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center 28%;
+  filter: saturate(0.9) contrast(1.04) brightness(0.94);
+  transition: transform 1.4s var(--ease-out);
+}
+.about__frame:hover img {
+  transform: scale(1.035);
+}
+
+/* 取景框四角的对位标记 —— 摄影语汇，也顺手解决了「卡片很平」的问题 */
+.about__corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  z-index: var(--z-float);
+  border: 1px solid var(--accent);
+  opacity: 0.75;
+}
+.about__corner--tl {
+  top: 14px;
+  left: 14px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.about__corner--br {
+  right: 14px;
+  bottom: 14px;
+  border-left: 0;
+  border-top: 0;
+}
+
+.about__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+  color: var(--text-3);
+}
+
+/* ── 文字区 ───────────────────────────────────────────── */
+.about__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.about__para {
+  font-size: 17px;
+  line-height: 1.95;
+  color: var(--text-2);
+  max-width: 60ch;
+}
+.about__para--dim {
+  color: var(--text-3);
+  border-left: 1px solid var(--accent-line);
+  padding-left: 22px;
+}
+
+.about__contacts {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.about__contact {
+  background: var(--bg-soft);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transition: background 0.5s var(--ease);
+}
+.about__contact:hover {
+  background: var(--bg-raise);
+}
+.about__contact dt {
+  color: var(--text-3);
+}
+.about__contact dd {
+  font-size: 15.5px;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.about__contact a {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.4s var(--ease);
+}
+.about__contact a:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* ── 数据 ─────────────────────────────────────────────── */
+.about__stats {
+  margin-top: clamp(56px, 6vw, 92px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.stat {
+  position: relative;
+  padding: 40px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stat + .stat {
+  border-left: 1px solid var(--line);
+}
+
+.stat__num {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  font-size: clamp(42px, 4.2vw, 68px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat__num em {
+  font-size: 0.42em;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0;
+  transform: translateY(-0.18em);
+}
+
+.stat__label {
+  font-size: 13.5px;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+}
+
+.stat__idx {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  color: var(--text-3);
+  opacity: 0.55;
+}
+
+/* ── 时间线 ───────────────────────────────────────────── */
+.about__timeline {
+  margin-top: clamp(56px, 6vw, 92px);
+}
+
+.about__timeline-head {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  color: var(--text-3);
+  margin-bottom: 40px;
+}
+
+.about__nodes {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+
+.about__node {
+  position: relative;
+  padding: 0 36px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* 横贯的 1px 线，节点用实心点压在上面 */
+.about__node::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+}
+.about__node:last-child::before {
+  background: linear-gradient(to right, var(--line), transparent);
+}
+
+.about__dot {
+  position: relative;
+  z-index: var(--z-raised);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-line);
+  background: var(--bg);
+}
+.about__dot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+.about__node.is-in .about__dot::after,
+.about__node:hover .about__dot::after {
+  opacity: 1;
+}
+
+.about__year {
+  font-size: 12px !important;
+  letter-spacing: 0.16em !important;
+  color: var(--accent);
+  padding-top: 6px;
+}
+
+.about__node-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.about__node-desc {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--text-3);
+  padding-right: 20px;
+}
+
+@media (max-width: 1280px) {
+  .about__main {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  }
+  .about__node {
+    padding-right: 22px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .about__main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .about__portrait {
+    position: static;
+    max-width: 460px;
+  }
+  .about__stats,
+  .about__nodes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stat:nth-child(3) {
+    border-left: 0;
+  }
+  .stat:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+  .about__node:nth-child(n + 3) {
+    margin-top: 34px;
+  }
+}
+
+@media (max-width: 760px) {
+  .about__contacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,35 @@
+# 依赖与构建产物
+node_modules/
+dist/
+*.local
+
+# 原始照片（相机原图，体积大，不进版本库；成品图由 tools/ 下的脚本生成）
+photos/
+
+# ⚠️ public/images 与 public/media 必须入库！
+# 它们是构建的输入（vite build 会把 public/ 整包复制到 dist/），
+# 一旦被忽略，CI 构建出来的站会缺少全部作品图、hero 视频与音频，线上直接 404。
+# （2026-11-10 曾因此导致 Cloudflare Pages 构建出的站点图片全丢）
+
+# npm 镜像配置只用于本机加速，不要带进 CI（境外构建机走国内镜像会变慢甚至超时）
+.npmrc
+
+# 本地点选批注桥的运行数据
+.annotations/
+
+# 编辑器 / 系统
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# 日志
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# 临时目录与本地备份
+.dsh-tmp/
+_backup_before_restore_*/

@@ -1,0 +1,163 @@
+/* ══════════════════════════════════════════════════════════
+   大标题：金属渐变 + 逐字入场 + 流光
+   渐变走「竖向」，这样每个字身上的渐变完全一致；
+   走横向的话每个字会各自跑一遍色带，中文看起来会乱。
+   ══════════════════════════════════════════════════════════ */
+
+.dtitle {
+  display: flex;
+  flex-direction: column;
+  /* 让每行收缩到文字本身宽度，下面那条细线才不会长过文字 */
+  align-items: flex-start;
+}
+
+.dtitle__line {
+  position: relative;
+  display: block;
+}
+
+/* ── 第一行：冷银金属 ─────────────────────────────────── */
+.dtitle__char {
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+
+  background-image: linear-gradient(
+    180deg,
+    #8f98a5 0%,
+    #ccd3dd 20%,
+    #ffffff 34%,
+    #e6eaf0 44%,
+    #b9c1cc 60%,
+    #98a1ae 80%,
+    #7c8592 100%
+  );
+  background-size: 100% 240%;
+  background-position: 50% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  opacity: 0;
+}
+
+/* 进入视口才开始逐字入场 */
+.dtitle.is-in .dtitle__char {
+  animation:
+    dtitle-rise 1.05s var(--ease-out) both,
+    dtitle-flow 9s var(--ease) infinite;
+  animation-delay:
+    calc(var(--base, 0ms) + var(--i, 0) * var(--stagger, 52ms)),
+    calc(var(--base, 0ms) + var(--i, 0) * var(--stagger, 52ms) + 1400ms);
+}
+
+/* ── 第二行：青铜金属 + 霓虹辉光（辉光随流光一起呼吸） ── */
+.dtitle__line.is-accent .dtitle__char {
+  background-image: linear-gradient(
+    180deg,
+    #7c6039 0%,
+    #c9a87c 18%,
+    #fff8ec 32%,
+    #e2c9a4 42%,
+    #c9a87c 58%,
+    #9c7c52 80%,
+    #6f5636 100%
+  );
+}
+
+.dtitle.is-in .dtitle__line.is-accent .dtitle__char {
+  animation-name: dtitle-rise, dtitle-glow;
+  /* 辉光整行同频，不跟着逐字错位，否则会变成一团乱闪 */
+  animation-delay:
+    calc(var(--base, 0ms) + var(--i, 0) * var(--stagger, 52ms)),
+    calc(var(--base, 0ms) + 1400ms);
+}
+
+/* ── 逐字翻起 ─────────────────────────────────────────── */
+@keyframes dtitle-rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0.66em, 0) rotateX(-68deg) scale(0.9);
+    filter: blur(7px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* ── 冷银流光：高光带自上而下扫一遍再回来 ─────────────── */
+@keyframes dtitle-flow {
+  0%,
+  100% {
+    background-position: 50% 100%;
+  }
+  50% {
+    background-position: 50% 0%;
+  }
+}
+
+/* ── 青铜流光 + 辉光呼吸 ──────────────────────────────── */
+@keyframes dtitle-glow {
+  0%,
+  100% {
+    background-position: 50% 100%;
+    text-shadow:
+      0 0 28px rgba(201, 168, 124, 0.42),
+      0 0 80px rgba(201, 168, 124, 0.18);
+  }
+  50% {
+    background-position: 50% 0%;
+    text-shadow:
+      0 0 52px rgba(201, 168, 124, 0.8),
+      0 0 140px rgba(201, 168, 124, 0.34);
+  }
+}
+
+/* ── 强调行下方那条自己画出来的辉光细线 ───────────────── */
+.dtitle__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.18em;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    rgba(201, 168, 124, 0.55) 42%,
+    rgba(201, 168, 124, 0.12) 78%,
+    transparent 100%
+  );
+  box-shadow: 0 0 14px rgba(201, 168, 124, 0.55);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.dtitle.is-in .dtitle__rule {
+  animation: dtitle-rule 1.5s var(--ease-out) var(--rule-delay, 1200ms) forwards;
+}
+
+@keyframes dtitle-rule {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dtitle__char {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+  .dtitle__rule {
+    transform: scaleX(1);
+    animation: none;
+  }
+}

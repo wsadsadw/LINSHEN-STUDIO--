@@ -1,0 +1,251 @@
+/* ══ 服务套餐 ══════════════════════════════════════════════
+   与「个人优势」的六格等分不同：那边六条优势是等价的，这边三档价格有强弱。
+   所以刻意不做三等分——三档等宽是价格表最通用的排法，客户一眼看不出你主推哪档。
+   改用 1 : 1.22 : 1 的非对称列宽，让推荐档在物理尺寸上就占主导，
+   再叠上「底色抬高 + 顶部一道青铜光」分层，而不是靠放大字号硬抢。
+   仍然保留横向对比：客户要比价，三档摊平看比横滑、堆叠都直接。 */
+
+.plans__grid {
+  margin-top: clamp(52px, 5.5vw, 88px);
+  display: grid;
+  grid-template-columns: 1fr 1.22fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.plans__card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(30px, 2.6vw, 46px) clamp(26px, 2.2vw, 42px) clamp(34px, 2.8vw, 50px);
+  background: var(--bg-soft);
+  overflow: hidden;
+  transition: background 0.6s var(--ease);
+}
+.plans__card:hover {
+  background: var(--bg-raise);
+}
+
+/* 推荐档：不只是换个底色——内边距也放宽，让它在同一条水平线上比两侧「站得更开」 */
+.plans__card.is-featured {
+  background: var(--bg-raise);
+  padding-block: clamp(38px, 3.2vw, 58px) clamp(42px, 3.4vw, 62px);
+}
+.plans__card.is-featured::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  pointer-events: none;
+}
+
+/* hover 时从左侧扫进来的青铜细线（与优势卡同语言） */
+.plans__sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.9s var(--ease-out);
+  pointer-events: none;
+}
+.plans__card:hover .plans__sweep {
+  transform: scaleX(1);
+}
+
+.plans__head {
+  position: relative;
+  z-index: var(--z-raised);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+}
+
+.plans__no {
+  color: var(--text-3);
+}
+
+.plans__flag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  border-radius: 99px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.plans__name {
+  position: relative;
+  z-index: var(--z-raised);
+  font-size: clamp(20px, 1.5vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* 推荐档的档位名与报价各放大一号，与加宽的列形成呼应——
+   这样三档的"主次"同时由「宽度、底色、字号」三条线共同表达，
+   而不是只靠一个徽章标签在喊。 */
+.plans__card.is-featured .plans__name {
+  font-size: clamp(22px, 1.75vw, 30px);
+}
+.plans__card.is-featured .plans__amount {
+  font-size: clamp(30px, 2.5vw, 40px);
+}
+
+.plans__tagline {
+  position: relative;
+  z-index: var(--z-raised);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+}
+
+.plans__price {
+  position: relative;
+  z-index: var(--z-raised);
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.plans__amount {
+  font-size: clamp(26px, 2.2vw, 34px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.plans__unit {
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+
+.plans__lead {
+  position: relative;
+  z-index: var(--z-raised);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-2);
+}
+
+.plans__list {
+  position: relative;
+  z-index: var(--z-raised);
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.plans__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-3);
+  transition: color 0.6s var(--ease);
+}
+.plans__card:hover .plans__item {
+  color: var(--text-2);
+}
+
+/* 圆环里一个小实心点：比「✓」克制，也比「•」有信息量 */
+.plans__tick {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 6px;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+}
+.plans__tick::after {
+  content: '';
+  position: absolute;
+  inset: 3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* 落到卡片底部，让三张卡的 CTA 对齐在同一水平线 */
+.plans__cta {
+  position: relative;
+  z-index: var(--z-raised);
+  margin-top: auto;
+  padding-top: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  transition:
+    color 0.5s var(--ease),
+    gap 0.5s var(--ease-out);
+}
+.plans__cta:hover {
+  color: var(--accent);
+  gap: 14px;
+}
+
+.plans__foot {
+  margin-top: 26px;
+}
+
+.plans__note {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-3);
+  max-width: 68ch;
+}
+
+@media (max-width: 1080px) {
+  .plans__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .plans__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 套餐编号 11px→12px，CTA 11px→12.5px：
+     小字在手机上单列铺开后缩得读不动，而「预约这一档」是本区块唯一的行动入口 */
+  .plans__no {
+    font-size: 12px;
+  }
+  .plans__cta {
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    /* 触控高度补到 44px */
+    min-height: 44px;
+    padding-top: 0;
+    align-items: center;
+  }
+  .plans__flag {
+    font-size: 11.5px;
+  }
+}

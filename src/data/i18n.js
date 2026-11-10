@@ -1,0 +1,380 @@
+import {
+  about as zhAbout,
+  booking as zhBooking,
+  brand as zhBrand,
+  heroReel as zhHeroReel,
+  navLinks as zhNavLinks,
+  series as zhSeries,
+  services as zhServices,
+  studio as zhStudio,
+  strengths as zhStrengths,
+  works as zhWorks,
+} from './site.js'
+
+const enBrand = {
+  ...zhBrand,
+  /* 两行结构：第一行品牌名两语言都固定为 LINSHEN.STUDIO（品牌名不翻译），
+     第二行才是语言相关的副标题。原本这里写 'Lin Shen Studio'，
+     会让英文导航变成「Lin Shen Studio / LIN SHEN STUDIO」—— 同一个名字显示两遍。 */
+  zh: 'LINSHEN.STUDIO',
+  en: 'PHOTOGRAPHER · PORTRAIT / WEDDING / COMMERCIAL',
+  tagline: 'PHOTOGRAPHER · PORTRAIT / WEDDING / COMMERCIAL',
+}
+
+const enNavLinks = zhNavLinks.map((link, index) => ({
+  ...link,
+  label: ['INDEX', 'SERIES', 'WORK', 'EDGE', 'PACKAGES', 'BOOKING'][index],
+  en: link.label,
+}))
+
+const enStudio = {
+  ...zhStudio,
+  editorial: {
+    title: 'Where light falls,\nstories stay.',
+    viewWork: 'EXPLORE THE WORK',
+    chapterNav: 'Explore the studio',
+  },
+  wordmarkAlt: 'LINSHEN.STUDIO — documentary weddings · portraits · commercial photography',
+  rule: 'PHOTOGRAPHY · WEDDING / PORTRAIT / COMMERCIAL',
+  services: {
+    kicker: 'SERVICES / CREATIVE WORK',
+    title: 'DOCUMENTARY WEDDINGS\nPORTRAITS · COMMERCIAL',
+    desc: 'One camera, the whole story. No posing, no commands,\njust the moments you almost missed.',
+    cta: 'CHECK AVAILABILITY',
+  },
+  form: {
+    kicker: 'START A PROJECT',
+    nameLabel: 'NAME',
+    namePlaceholder: 'Your name',
+    contactLabel: 'CONTACT',
+    contactPlaceholder: 'Phone / WeChat',
+    briefLabel: 'BRIEF',
+    briefPlaceholder: 'What and when would you like to shoot?',
+    submit: 'WECHAT INQUIRY',
+    sent: 'COPIED — SCAN TO ADD',
+  },
+}
+
+const EN_REEL_ALTS = [
+  'Wedding detail: two rings resting on dark velvet, cool metal highlights',
+  'Wedding detail: white lace fabric, texture and folds under cool light',
+  'Still life: dried flowers and eucalyptus bouquet on a dark stone surface',
+  'Still life: matte letterpress invitation flat lay with a wax seal',
+  'Scene: empty church interior, wooden pews and shafts of daylight',
+  'Architectural detail: cool blue light from a stained glass window on stone',
+  'Still life: a champagne tower in a dark reception hall, silver and candlelight',
+  'Still life: a pair of ivory wedding shoes on a dark rug',
+  'Still life: white tulle veil draped over an old wooden chair',
+  'Still life: thin candles and tarnished silverware on dark slate',
+  'Mood: rain on a dark window with cool out-of-focus city lights',
+  'Architecture: an old stone doorway with a hard diagonal shaft of daylight',
+]
+
+const enHeroReel = zhHeroReel.map((item, index) => ({
+  ...item,
+  alt: EN_REEL_ALTS[index] ?? `Photography work ${String(index + 1).padStart(2, '0')}`,
+}))
+
+const enAbout = {
+  ...zhAbout,
+  title: 'Twelve years, one thing',
+  lead: "I'm Lin Shen, an independent photographer.",
+  paragraphs: [
+    'In 2014, I left an architecture firm and bought my first full-frame camera with my savings. I used to shoot slowly—two thousand frames at a wedding, and I could not sleep unless I found ten worth keeping.',
+    'Twelve years later, I still do one thing: press the shutter when people are most relaxed and unguarded. I do not pose you or call out “look at the camera.” I stay close and wait for the light to arrive.',
+  ],
+  contacts: [
+    { label: 'PHONE', value: '183 7937 8173', href: 'tel:+8618379378173' },
+    { label: 'EMAIL', value: '276238371@qq.com', href: 'mailto:276238371@qq.com' },
+  ],
+  stats: [
+    { value: 6, suffix: 'yrs', label: 'independent\nphotography' },
+    { value: 300, suffix: '+', label: 'shoots\ncompleted' },
+    { value: 50, suffix: '+', label: 'cities\nobserved' },
+    { value: 96, suffix: '%', label: 'repeat &\nreferral clients' },
+  ],
+  timeline: [
+    { year: '2014', title: 'Started', desc: 'Left the architecture studio and joined a commercial photography team as an assistant.' },
+    { year: '2017', title: 'Independent', desc: 'Founded the studio and focused on documentary weddings and portraits.' },
+    { year: '2021', title: 'Brand work', desc: 'Started creating visual campaigns for consumer brands and editorial teams.' },
+    { year: '2025', title: 'Today', desc: 'Keeping the yearly schedule under 70 shoots—fewer projects, more attention.' },
+  ],
+}
+
+const enSeries = {
+  ...zhSeries,
+  latin: 'SERIES',
+  title: 'Four kinds of shooting, four different approaches',
+  desc: 'One shutter, four kinds of patience. Start by finding the one you need.',
+  items: [
+    {
+      ...zhSeries.items[0],
+      title: 'Documentary weddings',
+      desc: 'From the quiet morning prep to the last dance. No posing, no interrupting — only the moments that actually happen.',
+      meta: 'Full day · two cameras · previews before retouching',
+      alt: 'Documentary wedding: a father walking his daughter down the aisle',
+    },
+    {
+      ...zhSeries.items[1],
+      title: 'Portrait sessions',
+      desc: 'One person at a time. A couple of hours to take the fear of the camera apart, and keep the frame you recognise as yourself.',
+      meta: 'Half or full day · natural light · 20–40 retouched frames',
+      alt: 'Portrait of a woman in soft window light',
+    },
+    {
+      ...zhSeries.items[2],
+      title: 'Family documentary',
+      desc: 'Shot during the few years your children still throw themselves into your arms. No sets, no costume changes — shot at home.',
+      meta: 'At your home · 2–3 hours · quiet moments included',
+      alt: 'Family documentary: a parent lifting a laughing child',
+    },
+    {
+      ...zhSeries.items[3],
+      title: 'Brand & still life',
+      desc: 'Visual work for products that need to look expensive. Light, texture and negative space, built for your detail pages and key visuals.',
+      meta: 'Studio or on location · priced per frame · commercial licence included',
+      alt: 'Still life: wedding rings resting on fabric, macro detail',
+    },
+  ],
+}
+
+const enWorks = {
+  ...zhWorks,
+  latin: 'SELECTED WORK',
+  title: 'Selected work',
+  desc: 'Four stories, four kinds of light. Every frame happened in the moment—nothing was staged.',
+  // 球面画廊的 alt：zhWorks.gallery 是通过 ...zhWorks 继承来的，alt 是中文，
+  // 所以这里必须整体覆盖，否则英文界面下读屏软件会读中文。
+  gallery: [
+    { src: '/images/dome/dome-01.webp', alt: 'A bride standing in backlit forest light, smiling' },
+    { src: '/images/dome/dome-02.webp', alt: 'A candlelit church wedding ceremony, the couple holding hands' },
+    { src: '/images/dome/dome-03.webp', alt: 'Close-up of hands exchanging wedding rings' },
+    { src: '/images/dome/dome-04.webp', alt: 'Guests throwing flower petals over the couple' },
+    { src: '/images/dome/dome-05.webp', alt: 'An outdoor lawn wedding vow ceremony' },
+    { src: '/images/dome/dome-06.webp', alt: "The couple's first kiss at the altar" },
+    { src: '/images/dome/dome-07.webp', alt: 'The couple cutting their wedding cake together' },
+    { src: '/images/dome/dome-08.webp', alt: "The couple's first dance under warm string lights" },
+    { src: '/images/dome/dome-09.webp', alt: 'The bride tossing her bouquet as friends cheer' },
+    { src: '/images/dome/dome-10.webp', alt: 'The bride holding a handwritten letter during her vows' },
+    { src: '/images/dome/dome-11.webp', alt: 'A portrait of a woman in soft window light' },
+    { src: '/images/dome/dome-12.webp', alt: 'A solo portrait of a bride wearing a veil' },
+    { src: '/images/dome/dome-13.webp', alt: 'A solo portrait of a groom in a tailored suit' },
+    { src: '/images/dome/dome-14.webp', alt: 'A close portrait of a couple gazing at each other' },
+    { src: '/images/dome/dome-15.webp', alt: 'An elderly couple holding hands and smiling' },
+    { src: '/images/dome/dome-16.webp', alt: 'A parent lifting a laughing child into the air' },
+    { src: '/images/dome/dome-17.webp', alt: 'Bridesmaids laughing together in a garden' },
+    { src: '/images/dome/dome-18.webp', alt: 'A side-profile portrait with soft rim light' },
+    { src: '/images/dome/dome-19.webp', alt: 'A candid shot of a woman glancing back with a smile' },
+    { src: '/images/dome/dome-20.webp', alt: 'A close-up of a couple embracing' },
+    { src: '/images/dome/dome-21.webp', alt: 'A candid portrait of someone laughing openly' },
+    { src: '/images/dome/dome-22.webp', alt: 'A portrait shot through a translucent wedding veil' },
+    { src: '/images/dome/dome-23.webp', alt: "Close-up of a bride's bouquet" },
+    { src: '/images/dome/dome-24.webp', alt: 'A macro shot of wedding rings resting on fabric' },
+    { src: '/images/dome/dome-25.webp', alt: 'Detail of lace and fabric on a wedding dress' },
+    { src: '/images/dome/dome-26.webp', alt: 'A flat lay of wedding invitations, dried flowers and a wax seal' },
+    { src: '/images/dome/dome-27.webp', alt: 'A pair of wedding shoes arranged on a soft rug' },
+    { src: '/images/dome/dome-28.webp', alt: 'A father walking his daughter down the aisle' },
+    { src: '/images/dome/dome-29.webp', alt: 'A bride getting ready in front of a softly lit mirror' },
+    { src: '/images/dome/dome-30.webp', alt: 'A champagne tower being poured at an evening celebration' },
+    { src: '/images/dome/dome-31.webp', alt: 'A couple walking hand in hand through an old town street' },
+    { src: '/images/dome/dome-32.webp', alt: 'A newlywed couple embracing on a beach at sunset' },
+    { src: '/images/dome/dome-33.webp', alt: 'A couple walking through a golden wheat field' },
+    { src: '/images/dome/dome-34.webp', alt: 'A portrait inside a bright glass greenhouse' },
+    { src: '/images/dome/dome-35.webp', alt: 'A couple strolling along a lakeside boardwalk in late afternoon' },
+    { src: '/images/dome/dome-36.webp', alt: 'A couple standing together on a hilltop at sunset' },
+    { src: '/images/dome/dome-37.webp', alt: 'A family moment on an old house porch in the afternoon' },
+    { src: '/images/dome/dome-38.webp', alt: 'A couple sharing a quiet moment on a rooftop at dusk' },
+    { src: '/images/dome/dome-39.webp', alt: 'A warm portrait in a cozy cafe corner' },
+    { src: '/images/dome/dome-40.webp', alt: 'A portrait in a warm library loft' },
+  ],
+  items: [
+    { ...zhWorks.items[0], title: 'A Ceremony in the Woods', category: 'Documentary wedding', place: 'Hangzhou · Qiandao Lake', note: 'Full-day coverage · natural light · no flash', alt: 'A couple standing side by side in a forest after their wedding ceremony' },
+    { ...zhWorks.items[1], title: 'Ten Minutes Before Leaving', category: 'Documentary photography', place: 'Nanchang · Old Town', note: 'Candid moments · black-and-white film look', alt: 'A bride smiling inside a car while the groom waits outside the open door' },
+    { ...zhWorks.items[2], title: 'Vows by Candlelight', category: 'Documentary wedding', place: 'Shanghai · Xuhui', note: 'Church ceremony · available light · two cameras', alt: 'A newlywed couple embracing in a church with geometric black-and-white tiles' },
+    { ...zhWorks.items[3], title: 'Patterns in the Palm', category: 'Detail & portrait', place: 'Shenzhen · Nanshan', note: 'Macro detail · hand retouching', alt: 'Two hands holding each other, decorated with henna patterns and gold jewelry' },
+  ],
+}
+
+const enStrengths = {
+  ...zhStrengths,
+  title: 'Six small things I do well',
+  desc: 'Photography is more than pressing the shutter. These are the rules twelve years of real shoots taught me.',
+  items: [
+    { ...zhStrengths.items[0], title: 'Twelve years on set', desc: 'More than 860 shoots, from storms at outdoor ceremonies to blackouts in banquet halls. Every surprise has a backup plan.' },
+    { ...zhStrengths.items[1], title: 'Two cameras, always a backup', desc: 'Two bodies, four lenses, and duplicate cards. Files are backed up on site so the key moment is never lost to a device.' },
+    { ...zhStrengths.items[2], title: 'Preview gallery in 72 hours', desc: 'Within 72 hours, you receive a full preview gallery for selection. You never have to wait a week to see what we made.' },
+    { ...zhStrengths.items[3], title: 'A clear conversation first', desc: 'Before every shoot we talk through the location, timing, wardrobe, and feeling you want. No blind shooting.' },
+    { ...zhStrengths.items[4], title: 'Hand retouching, real skin', desc: 'I keep skin texture and natural contrast, removing only what does not belong in the frame.' },
+    { ...zhStrengths.items[5], title: 'Privacy written into the contract', desc: 'Your images never appear in my portfolio or social feeds without written permission. No exceptions.' },
+  ],
+}
+
+const enServices = {
+  ...zhServices,
+  latin: 'PACKAGES',
+  title: 'Three ways to work together',
+  desc: 'The price is a starting point, not the final number—location, hours, and deliverables decide the rest. Tell me what you need and I will send a clear quote.',
+  items: [
+    {
+      ...zhServices.items[0],
+      name: 'Portrait Session',
+      tagline: 'Half day · one or two people',
+      priceNote: 'from · 2 hours',
+      lead: 'For personal branding, couples, graduation, and family portraits.',
+      features: [
+        '2 hours of shooting, 1–2 locations',
+        '15 retouched images',
+        'One pre-shoot call to plan style and wardrobe',
+        'High-resolution files delivered in 7 business days',
+      ],
+    },
+    {
+      ...zhServices.items[1],
+      name: 'Documentary Wedding',
+      tagline: 'Full day · two cameras',
+      priceNote: 'from · 10 hours',
+      lead: 'From morning makeup to the last dance—a whole day, without posing or interrupting.',
+      features: [
+        '10 hours of coverage, two bodies, files backed up on site',
+        'Around 50 finished images, all retouched',
+        'Location scout and timeline planning beforehand',
+        'Preview gallery within 72 hours for selection',
+        'One fine-art album, 20 pages',
+      ],
+    },
+    {
+      ...zhServices.items[2],
+      name: 'Commercial & Brand',
+      tagline: 'Per project · location included',
+      priceNote: 'from / day',
+      lead: 'Brand visuals, product, interior, and team portraits.',
+      features: [
+        'Day rate, including pre-production planning',
+        'Product, interior, or people—your choice',
+        'Basic set build and lighting plan included',
+        'Commercial license with multiple export sizes',
+      ],
+    },
+  ],
+  footnote: 'Starting prices shown above; travel and accommodation outside Nanchang are not included. A written quote and contract are provided before we begin—the contract is what counts.',
+}
+
+const enBooking = {
+  ...zhBooking,
+  titleLines: ['Tell me about the moment', 'you want to keep'],
+  desc: 'Please reach out 2–3 weeks before your date. Send a few details below and I will reply within 24 hours with availability and a quote.',
+  form: {
+    ...zhBooking.form,
+    types: ['Documentary wedding', 'Portrait session', 'Commercial photography', 'Family story', 'Other / not sure yet'],
+    submit: 'SUBMIT INQUIRY',
+    note: 'Submitting opens your email client and addresses 276238371@qq.com. Prefer WeChat? Use the button beside it.',
+    copy: 'COPY FOR WECHAT',
+    copied: 'COPIED — PASTE IN WECHAT',
+  },
+  wechat: {
+    ...zhBooking.wechat,
+    label: 'WeChat inquiry',
+    hint: 'Scan to add me on WeChat. I will reply as soon as I can.',
+    modalTitle: 'Scan to chat on WeChat',
+    cardHint: 'Scan to add',
+  },
+  channels: [
+    { k: 'PHONE', label: 'Phone / SMS', value: '183 7937 8173', href: 'tel:+8618379378173' },
+    { k: 'EMAIL', label: 'Email', value: '276238371@qq.com', href: 'mailto:276238371@qq.com' },
+    { k: 'WECHAT', label: 'WeChat', value: 'Scan to add', action: 'wechat' },
+  ],
+  hours: 'Available 10:00–20:00 · Every day (shoot days may be slower)',
+  footer: {
+    ...zhBooking.footer,
+    copyright: '© 2026 LINSHEN.STUDIO',
+    icp: 'ICP filing: demo',
+    note: 'Demo version — project data and images are placeholders.',
+  },
+}
+
+export const ui = {
+  zh: {
+    navAria: '主导航',
+    skipToContent: '跳到主要内容',
+    languageLabel: '切换到英文',
+    languageShort: 'EN',
+    bookingCta: '预约拍摄',
+    aboutSection: '个人经历',
+    seriesSection: '拍摄系列',
+    portraitAlt: '摄影师个人肖像：侧逆光下的暗调人像',
+    portraitLocation: '摄影师 · 南昌',
+    portraitName: '林深 / LIN SHEN',
+    aboutClosing: '我不追求把每一张都修成海报，只希望十年后你翻到相册的时候，还能听见当时的声音。',
+    experience: 'EXPERIENCE / 经历',
+    worksSection: '精选项目',
+    sameShoot: '同类型拍摄',
+    fullPortfolio: ['完整作品集包含 40 余组案例，完整版请通过', '预约咨询', '索取。'],
+    strengthsSection: '个人优势',
+    servicesSection: '服务套餐',
+    servicesFeatured: '推荐',
+    servicesCta: '预约这一档',
+    bookingSection: '预约拍摄',
+    viewQr: '查看二维码',
+    name: '怎么称呼你',
+    namePlaceholder: '例如：小林',
+    contact: '手机号或微信号',
+    contactPlaceholder: '方便我联系到你',
+    type: '拍摄类型',
+    date: '期望档期',
+    city: '拍摄城市',
+    cityPlaceholder: '例如：南昌',
+    uncertain: ['档期和城市都拿不准也没关系，', '先聊需求，时间后面再定。'],
+    brief: '想拍点什么',
+    briefPlaceholder: '想留下的画面、参考风格、场地、人数……随便说说就行',
+    sentNote: '已打开邮件客户端。如果没反应，点左边按钮复制内容，发我微信一样可以。',
+    backToTop: 'BACK TO TOP',
+    close: '关闭',
+    qrAlt: '微信二维码',
+    qrPlaceholder: ['把你的微信二维码放进来', 'public/images/wechat-qr.png'],
+  },
+  en: {
+    navAria: 'Primary navigation',
+    skipToContent: 'Skip to main content',
+    languageLabel: '切换到中文',
+    languageShort: '中',
+    bookingCta: 'Book a shoot',
+    aboutSection: 'ABOUT ME',
+    seriesSection: 'SERIES',
+    portraitAlt: 'Portrait of Lin Shen in soft backlight',
+    portraitLocation: 'Photographer · Nanchang',
+    portraitName: 'LIN SHEN',
+    aboutClosing: 'I do not try to turn every frame into a poster. I want you to hear the room again when you open the album ten years from now.',
+    experience: 'EXPERIENCE',
+    worksSection: 'SELECTED WORK',
+    sameShoot: 'VIEW SIMILAR WORK',
+    fullPortfolio: ['The full portfolio includes 40+ stories. Request the complete set through', 'an inquiry', '.'],
+    strengthsSection: 'WHY ME',
+    servicesSection: 'PACKAGES',
+    servicesFeatured: 'MOST BOOKED',
+    servicesCta: 'BOOK THIS PACKAGE',
+    bookingSection: 'BOOK A SHOOT',
+    viewQr: 'VIEW QR CODE',
+    name: 'YOUR NAME',
+    namePlaceholder: 'e.g. Alex',
+    contact: 'PHONE OR WECHAT',
+    contactPlaceholder: 'How can I reach you?',
+    type: 'SHOOT TYPE',
+    date: 'PREFERRED DATE',
+    city: 'CITY',
+    cityPlaceholder: 'e.g. Shanghai',
+    uncertain: ['Not sure about the date or city yet?', 'Tell me what you need and we can decide together.'],
+    brief: 'TELL ME ABOUT THE SHOOT',
+    briefPlaceholder: 'The feeling, location, people, or references — anything helps.',
+    sentNote: 'Your email client should be open. If nothing happened, copy the details with the button on the left and send them on WeChat.',
+    backToTop: 'BACK TO TOP',
+    close: 'Close',
+    qrAlt: 'WeChat QR code',
+    qrPlaceholder: ['Add your WeChat QR code at', 'public/images/wechat-qr.png'],
+  },
+}
+
+export const siteByLang = {
+  zh: { brand: zhBrand, navLinks: zhNavLinks, studio: zhStudio, heroReel: zhHeroReel, series: zhSeries, about: zhAbout, works: zhWorks, strengths: zhStrengths, services: zhServices, booking: zhBooking },
+  en: { brand: enBrand, navLinks: enNavLinks, studio: enStudio, heroReel: enHeroReel, series: enSeries, about: enAbout, works: enWorks, strengths: enStrengths, services: enServices, booking: enBooking },
+}
+

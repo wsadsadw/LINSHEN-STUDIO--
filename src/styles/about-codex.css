@@ -1,0 +1,242 @@
+/* 「关于我」模块 —— 对齐 CodeX 版参考站（http://127.0.0.1:5275，即
+ * D:\...\网站方案\方案一-优化版）上这一模块的实际渲染结果。
+ *
+ * ⚠️ 为什么不能只改 About.css：
+ *   参考站里 About.css 与 editorial.css 是**先后加载**的，editorial.css 在
+ *   App.jsx 的末尾 import，而 About.jsx（连带 About.css）在它前面。同优先级下
+ *   后加载者胜出，所以参考站上真正生效的是 editorial.css 里那批 .about__* 覆盖，
+ *   About.css 自身的 5fr:7fr / 3:4 反而是被压掉的那一层。
+ *   本文件把那批覆盖逐条搬过来，并且在 About.jsx 里 import 在 About.css **之后**，
+ *   以复现参考站同样的层叠结果。
+ *
+ * 刻意没搬的东西（会影响整站，超出「关于我模块」范围）：
+ *   - editorial.css 的 :root 主题变量（配色、--container 1420px、--section-y 等）
+ *     唯一例外是圆角：那边 --r-md 是 0，所以这里显式给帧写 border-radius: 0。
+ *   - .nav__* / .works__* / .edge__* / .plans__* / .booking__* 等其它区块的样式。
+ *
+ * 另外，原文件里是全局选择器（.sec-head*、.section--line）的，
+ * 这里统一加 .about 前缀收窄，避免改动其它区块的标题排版。
+ */
+
+/* ── editorial.css 的全局排版，取其在 About 模块内的等价值 ── */
+.about {
+  font-weight: 300;
+}
+.about h2,
+.about h3,
+.about h4 {
+  font-weight: 400;
+}
+
+/* ── 区块级 ───────────────────────────────────────────── */
+/* 锚点落位不在这里写死：统一由 base.css 的 --anchor-offset 提供，About 与其它
+   模块走同一个值。这里原来是 94px、窄屏 128px（照抄参考站的 editorial.css），
+   但参考站窄屏的导航是「链接折成第二行」，本站是「直接隐藏链接区」，
+   条件不同，照抄只会造成偏移量不一致。 */
+.about.section--line {
+  border-top: 0;
+}
+.about > .container > .sec-head > .sec-head__meta {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+/* ── 区块标题 ─────────────────────────────────────────── */
+.about .sec-head {
+  gap: 38px;
+}
+.about .sec-head__meta {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+.about .sec-head__body {
+  grid-template-columns: 1.12fr 1fr;
+  gap: 8%;
+  align-items: start;
+}
+.about .sec-head__title {
+  font-size: clamp(30px, 3.4vw, 52px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+}
+.about .sec-head__desc {
+  font-size: 15px;
+  line-height: 1.95;
+  padding-top: 6px;
+  max-width: 48ch;
+}
+
+/* ── 人物图：照片最终 4:5、最大 420x525，无遮罩 / 无边框 / 无四角标记 ── */
+.about__main {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 10%;
+  margin-top: 48px;
+  align-items: center;
+}
+.about__portrait {
+  position: relative;
+  top: auto;
+  max-width: 420px;
+}
+.about__frame {
+  -webkit-mask-image: none;
+  mask-image: none;
+  border: 0;
+  border-radius: 0;
+}
+.about__frame img {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  padding: 0;
+}
+.about__frame::after,
+.about__corner {
+  display: none;
+}
+.about__caption {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+/* ── 文字与联系方式 ───────────────────────────────────── */
+.about__para {
+  font-size: 16px;
+  line-height: 2;
+}
+.about__para--dim {
+  font-size: 14px;
+  color: var(--text-3);
+}
+.about__contacts {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-top: 8px;
+  gap: 24px;
+}
+.about__contact {
+  background: transparent;
+  padding: 20px 0 0;
+}
+.about__contact:hover {
+  background: transparent;
+}
+.about__contact dt {
+  font-size: 9px;
+}
+.about__contact dd {
+  font-size: 14px;
+}
+
+/* ── 数据 ─────────────────────────────────────────────── */
+.about__stats {
+  margin-top: 56px;
+}
+.stat {
+  padding: 28px 24px;
+  gap: 12px;
+}
+.stat:first-child {
+  padding-left: 0;
+}
+.stat__num {
+  font-size: clamp(36px, 3.5vw, 54px);
+  font-weight: 300;
+}
+.stat__num em {
+  font-size: 0.35em;
+}
+.stat__idx {
+  color: var(--text-3);
+  font-size: 8px;
+}
+.stat__label {
+  font-size: 11px;
+}
+
+/* ── 经历时间线 ───────────────────────────────────────── */
+.about__timeline {
+  margin-top: 60px;
+}
+.about__nodes {
+  gap: 30px;
+}
+.about__node-title {
+  font-size: 18px;
+}
+.about__node-desc {
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* ── 断点 ─────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .about .sec-head__body {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 760px) {
+  .about .sec-head {
+    gap: 26px;
+  }
+  .about .sec-head__body,
+  .about__main {
+    grid-template-columns: 1fr;
+  }
+  .about .sec-head__title {
+    max-width: 18ch;
+    font-size: 30px;
+  }
+  .about .sec-head__desc {
+    font-size: 14px;
+  }
+  .about .sec-head__meta {
+    gap: 12px;
+    font-size: 8px;
+  }
+  .about__main {
+    gap: 30px;
+    margin-top: 30px;
+  }
+  .about__portrait {
+    width: 100%;
+    max-width: none;
+  }
+  .about__frame {
+    max-width: 360px;
+    margin-inline: auto;
+  }
+  .about__frame img {
+    max-height: 450px;
+  }
+  .about__caption {
+    max-width: 360px;
+    margin-inline: auto;
+  }
+  .about__contacts {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .about__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stat {
+    padding: 24px 18px;
+  }
+  .stat:nth-child(3) {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .stat:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+  .about__nodes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 24px;
+  }
+}

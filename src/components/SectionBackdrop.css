@@ -1,0 +1,31 @@
+/* ══ 模块背景层（PixelBlast）════════════════════════════════
+   铺满所属 section 的最底层。上下边缘做淡出，
+   免得和相邻模块之间那根 1px 分割线（.section--line）硬碰硬。 */
+
+.sec-blast {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  overflow: hidden;
+  /* 纯装饰层：不接收指针事件，点击/划选全部穿透到内容上 */
+  pointer-events: none;
+  opacity: var(--sec-blast-opacity, 0.55);
+  /* -webkit- 必须写在标准属性前面：Vite 用的 lightningcss 去重时会
+     保留后者、删掉前者，顺序写反会导致 Safari 上失效 */
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+/* canvas 是绝对定位元素，而 .container 默认是静态定位——
+   静态元素永远画在定位元素下面，所以必须把内容层提上来，
+   否则背景会盖住正文。（Booking 模块自身已有 .booking__inner { z-index: var(--z-float) }，不在此列） */
+.section > .container {
+  position: relative;
+  z-index: var(--z-raised);
+}

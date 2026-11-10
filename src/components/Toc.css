@@ -1,0 +1,112 @@
+/* 右侧页内目录。
+   视觉上刻意复用导航栏那套浮层语汇（--bg-glass + backdrop-filter），
+   让它在压住正文或照片时读起来是「界面层」，而不是一块贴错地方的东西。 */
+
+.toc {
+  position: fixed;
+  /* 固定贴在最右侧。不再按版心往外推 —— 那样在 2560px 这类宽屏上会被推离
+     右边缘 250px 开外，看着像「没贴边」。代价是在 1440px 附近会压到正文，
+     所以下面用了和导航栏同族的磨砂底，保证压住照片也读得清。 */
+  right: clamp(14px, 1.8vw, 32px);
+  top: 50%;
+  z-index: var(--z-toc);
+  /* 容器本身不接收指针事件，只有链接可点 ——
+     否则这块竖条会在它下面挡住正文的点击。 */
+  pointer-events: none;
+  display: none;
+
+  /* 首屏不显示，滚进第二屏才淡入并轻微右→左滑入（类名由 Toc.jsx 按当前章节给）。
+     用 visibility 而不是只改 opacity：隐藏时必须让里面的链接退出 Tab 序列，
+     否则键盘用户会 Tab 进一个自己看不见的目录。 */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-50%) translateX(16px);
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.55s var(--ease-out),
+    visibility 0s linear 0.55s;
+}
+
+.toc.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.55s var(--ease-out),
+    visibility 0s linear 0s;
+}
+
+/* 再窄就没有余地了：1440px 下右边缘只剩 60px，塞不下带文字的目录 */
+@media (min-width: 1400px) {
+  .toc {
+    display: block;
+  }
+}
+
+.toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  backdrop-filter: blur(20px) saturate(155%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+
+.toc__link {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: var(--r-sm);
+  color: var(--text-3);
+  transition:
+    color 0.4s var(--ease),
+    background-color 0.4s var(--ease);
+}
+.toc__link:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* 刻度线：当前项会拉长并变成青铜色 */
+.toc__tick {
+  flex: none;
+  width: 12px;
+  height: 1px;
+  background: var(--line-3);
+  transition:
+    width 0.45s var(--ease-out),
+    background-color 0.45s var(--ease);
+}
+
+.toc__idx {
+  flex: none;
+  font-size: 9.5px !important;
+  opacity: 0.75;
+}
+
+/* flex:1 让标签吸掉多余空间，刻度线才会始终贴在同一条竖线上 */
+.toc__label {
+  flex: 1;
+  text-align: right;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.toc__link.is-active {
+  color: var(--accent);
+}
+.toc__link.is-active .toc__tick {
+  width: 22px;
+  background: var(--accent);
+}
+.toc__link.is-active .toc__idx {
+  opacity: 1;
+}

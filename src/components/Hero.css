@@ -1,0 +1,336 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ── 背景层 ───────────────────────────────────────────── */
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero__fallback,
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  /* 霓虹调色已在生成阶段做进视频里了，这里只做轻微校正，不再压暗——
+     压暗交给下面的遮罩层，否则辉光会被一起吃掉 */
+  filter: saturate(1.04) contrast(1.05);
+}
+
+.hero__fallback {
+  animation: hero-drift 42s var(--ease) infinite alternate;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.14) translateY(-1.2%);
+  }
+}
+
+.hero__video {
+  z-index: 1;
+}
+
+/* 三层遮罩：顶部给导航让位，底部压住文字区，整体做暗角。
+   暗角比之前收了一点，好让霓虹的辉光从中间透出来。 */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(to bottom, rgba(8, 9, 11, 0.88) 0%, rgba(8, 9, 11, 0) 28%),
+    linear-gradient(to top, rgba(8, 9, 11, 0.96) 0%, rgba(8, 9, 11, 0.55) 30%, rgba(8, 9, 11, 0) 60%),
+    radial-gradient(125% 95% at 76% 36%, rgba(8, 9, 11, 0) 32%, rgba(8, 9, 11, 0.55) 100%);
+}
+
+/* 极淡的竖向细线：整屏的「科技感」基本来自这一层 + 颗粒。
+   线条按 1700 版心分列，和内容左右边缘严格对齐，不做满屏等分。 */
+.hero__columns {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent 4%, #000 32%, transparent 92%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 4%, #000 32%, transparent 92%);
+}
+
+.hero__columns::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: min(100% - (var(--gutter) * 2), var(--container));
+  margin-inline: auto;
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+  background-size: calc(100% / 6) 100%;
+  box-shadow: inset -1px 0 0 var(--line);
+}
+
+/* ── 内容层 ───────────────────────────────────────────── */
+.hero__inner {
+  position: relative;
+  z-index: 4;
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding-top: 116px;
+  padding-bottom: 34px;
+  gap: 24px;
+}
+
+.hero__head {
+  grid-row: 1;
+}
+
+.hero__main {
+  grid-row: 2;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-block: 20px;
+}
+
+.hero__title {
+  font-size: clamp(46px, 6.6vw, 118px);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+}
+
+/* 第二行故意留出「缺口」，让标题不是一块方块 */
+.hero__title .dtitle__line.is-accent {
+  padding-left: 0.11em;
+}
+
+.hero__latin {
+  color: var(--text-3);
+  font-size: 11px !important;
+  letter-spacing: 0.34em !important;
+  animation: hero-fade 1.2s var(--ease-out) 0.5s both;
+}
+
+.hero__desc {
+  max-width: 58ch;
+  font-size: 16.5px;
+  line-height: 1.9;
+  color: var(--text-2);
+  animation: hero-fade 1.2s var(--ease-out) 0.62s both;
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  animation: hero-fade 1.2s var(--ease-out) 0.74s both;
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── 底部行 ───────────────────────────────────────────── */
+.hero__foot {
+  grid-row: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  animation: hero-fade 1.2s var(--ease-out) 0.9s both;
+}
+
+.hero__scroll {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-2);
+  transition: color 0.4s var(--ease);
+}
+.hero__scroll:hover {
+  color: var(--text);
+}
+.hero__scroll i {
+  display: block;
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  position: relative;
+  overflow: hidden;
+}
+.hero__scroll i::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 12px;
+  background: var(--text);
+  animation: scroll-dot 2.4s var(--ease) infinite;
+}
+@keyframes scroll-dot {
+  0% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(46px);
+    opacity: 0;
+  }
+}
+
+.hero__hud {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.hero__hud-row {
+  display: flex;
+  gap: 26px;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: rgba(8, 9, 11, 0.42);
+  backdrop-filter: blur(10px);
+}
+
+.hero__hud-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero__hud-item em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 8.5px;
+  letter-spacing: 0.22em;
+  color: var(--text-3);
+}
+.hero__hud-item b {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text-3);
+}
+
+.hero__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #7ddc9a;
+  box-shadow: 0 0 0 0 rgba(125, 220, 154, 0.6);
+  animation: pulse 2.6s var(--ease) infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(125, 220, 154, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(125, 220, 154, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(125, 220, 154, 0);
+  }
+}
+
+/* ── 底部走马灯 ───────────────────────────────────────── */
+.hero-ticker {
+  position: relative;
+  z-index: 4;
+  border-top: 1px solid var(--line);
+  background: rgba(8, 9, 11, 0.55);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+
+.hero-ticker__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+.hero-ticker__group {
+  display: flex;
+  align-items: center;
+  padding-block: 18px;
+}
+
+.hero-ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 34px;
+  padding-left: 34px;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.hero-ticker__item i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 1180px) {
+  .hero__hud-row {
+    gap: 16px;
+  }
+  .hero__hud-item:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero__foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero__hud {
+    align-items: flex-start;
+  }
+}

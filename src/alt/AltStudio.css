@@ -1,0 +1,516 @@
+/* ══════════════════════════════════════════════════════════
+   agency 海报式首屏
+   版式逻辑：整屏当海报做，主视觉是一组字标级排版。
+   刻意不做「上下居中 + 两个按钮 + 一张截图」那套 SaaS 结构。
+   ══════════════════════════════════════════════════════════ */
+
+.alt {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #7a0d00;
+  color: #fff;
+  font-family: var(--sans);
+  isolation: isolate;
+}
+
+/* ── 1. 橙红渐变底 ─────────────────────────────────────── */
+.alt__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(115% 95% at 74% 18%, #ff8a2b 0%, #f5470a 22%, #d01c00 44%, #8b0d00 70%, #330400 100%),
+    linear-gradient(200deg, #ff6a00 0%, #b30f00 100%);
+}
+
+/* ── 2b. 背景质感层（PatternWaves） ──────────────────────
+   只加纹理不改底色：组件里 backgroundColor 传的是 transparent。
+   pointer-events: none 不影响它的鼠标交互 ——
+   组件是在 window 上监听 pointermove/pointerdown，不是监听这一层，
+   所以设成 none 之后，点击和拖拽照样能穿到下面的照片线圈和字标。 */
+.alt__waves {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── 3. 同心环：镜头的意象，也给空出来的中心一点结构 ──── */
+.alt__rings {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: min(78vw, 1180px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.11) 0 1px,
+    transparent 1px 72px
+  );
+  mask-image: radial-gradient(circle, transparent 16%, #000 34%, #000 62%, transparent 86%);
+  -webkit-mask-image: radial-gradient(circle, transparent 16%, #000 34%, #000 62%, transparent 86%);
+}
+
+/* ── 3. 网格 ───────────────────────────────────────────── */
+.alt__grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+  background-size:
+    calc(100% / 6) 100%,
+    100% 25%;
+  mask-image: radial-gradient(120% 100% at 50% 45%, #000 34%, rgba(0, 0, 0, 0.35) 78%, transparent 100%);
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 45%, #000 34%, rgba(0, 0, 0, 0.35) 78%, transparent 100%);
+}
+
+/* 细扫描线：远看是质感，近看是「科技感」 */
+.alt__scan {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.055) 0 1px,
+    transparent 1px 4px
+  );
+  opacity: 0.7;
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+}
+
+/* ── 4. 光感 ───────────────────────────────────────────── */
+.alt__glow--core {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 58vw;
+  height: 34vw;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 250, 238, 0.95), rgba(255, 190, 96, 0.42) 44%, transparent 74%);
+  mix-blend-mode: screen;
+  filter: blur(24px);
+}
+
+/* 一抹冷色边缘光，和橙红形成对撞 —— 强对比不只在明度上 */
+.alt__glow--rim {
+  position: absolute;
+  right: -8%;
+  top: -12%;
+  width: 56vw;
+  height: 56vw;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(80, 190, 255, 0.34), rgba(60, 90, 255, 0.12) 46%, transparent 70%);
+  mix-blend-mode: screen;
+  filter: blur(30px);
+}
+
+.alt__vignette {
+  position: absolute;
+  inset: 0;
+  /* 暗角压在最底下的背景层之上、内容之下 */
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(140% 110% at 50% 50%, transparent 42%, rgba(40, 2, 0, 0.72) 100%),
+    linear-gradient(to bottom, rgba(30, 2, 0, 0.5) 0%, transparent 22%, transparent 62%, rgba(30, 2, 0, 0.82) 100%);
+}
+
+/* ── 5. 站点信息 ───────────────────────────────────────── */
+.alt__meta {
+  position: absolute;
+  top: clamp(88px, 8vw, 104px);
+  right: clamp(20px, 3vw, 54px);
+  z-index: 6;
+  font-size: 10px !important;
+  letter-spacing: 0.22em !important;
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   5b. 环绕字标的一圈照片（CircularCarousel）
+   环是「竖立」的：preset 仍是 cylinder，但俯角 tilt 推到 -76°，
+   相机从俯视变成近乎正视，躺着的转盘就立起来变成套在名字上的呼啦圈，
+   名字像横轴一样从环中间穿过去。
+   z-index 压在字标下面，所以照片从字标背后穿过；
+   穿过时会被上面的 .alt__dof 糊掉，字才读得清。
+   ══════════════════════════════════════════════════════════ */
+.alt__reel {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  /* --reel-shift 由组件按实际渲染位置量出来（见 AltStudio.jsx）。
+     coil 排布的包围盒天生对称，这个值会算成 0，留着是给别的 preset 兜底 */
+  transform: translate(-50%, calc(-50% + var(--reel-shift, 0px)));
+  width: min(100vw, 2000px);
+  height: clamp(480px, 38vw, 760px);
+  /* 压在字标之上：线圈转到前面那半圈要能盖住字 */
+  z-index: 4;
+}
+
+/* 远侧那半圈用「变透明」而不是「变暗」来退后。
+   变暗会糊成一块黑板挡在字前面；变透明才读得成
+   「近侧压住字、远侧被字挡住」——这才是线圈该有的前后关系。 */
+.alt__reel .circular-carousel__shade {
+  background: transparent;
+}
+
+.alt__reel .circular-carousel__card {
+  opacity: calc(1 - var(--cc-depth, 0) * 0.82);
+}
+
+/* ══════════════════════════════════════════════════════════
+   6. 主视觉字标
+   两个字体打架才有意思：Inter 的超粗黑体 vs 高对比衬线的斜体。
+   ══════════════════════════════════════════════════════════ */
+.alt__center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 46%;
+  transform: translateY(-50%);
+  /* 在照片线圈之下（线圈 4）：线圈绕到前面时能盖住字，绕到后面时靠透明度让位 */
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 2vw, 34px);
+  padding-inline: clamp(14px, 2.4vw, 44px);
+}
+
+/* ══════════════════════════════════════════════════════════
+   6. 主视觉：粒子字标（ParticleText）
+   组件把文字采样成 canvas 粒子，所以字标不再是 DOM 文本。
+   高度必须显式给死 —— canvas 的采样范围就是这块矩形。
+   宽度取满版心，字号留了余量：组件内部还会按 92% 宽再收一次，
+   给太多会触发它自动缩字号，字标反而变小。
+   ══════════════════════════════════════════════════════════ */
+.alt__mark {
+  width: 100%;
+  height: clamp(240px, 19.6vw, 376px);
+}
+
+/* 粒子画布：「融合」靠的是暖色 + 去掉隔层，不是靠混合模式。
+   试过 mix-blend-mode: soft-light —— 它会跟着背景明暗走，
+   照片暗的地方字也跟着暗掉，字母直接消失，不能这么用。 */
+.alt__mark .particle-text__canvas {
+  mix-blend-mode: normal;
+}
+
+/* 字标下方的一道细分隔 + 一行小字 */
+.alt__rule {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 26px);
+  width: min(100%, 1180px);
+  opacity: 0.9;
+}
+
+.alt__rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+}
+
+.alt__rule-text {
+  font-size: 9.5px !important;
+  letter-spacing: 0.2em !important;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+}
+
+/* ── 7. 左下：服务 ─────────────────────────────────────── */
+.alt__bl {
+  position: absolute;
+  left: clamp(20px, 3vw, 54px);
+  bottom: clamp(58px, 6vw, 86px);
+  z-index: 6;
+  max-width: min(46ch, 44vw);
+}
+
+.alt__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px !important;
+  letter-spacing: 0.24em !important;
+  opacity: 0.82;
+}
+.alt__kicker i {
+  width: 22px;
+  height: 1px;
+  background: #fff;
+  opacity: 0.8;
+}
+
+/* 标题现在由 DisplayTitle 驱动（逐字翻起 + 金属渐变 + 辉光线），
+   排版参数在这里控制：字号比原来放大一档 —— 26–42px 在这屏偏「说明文」，
+   撑不住 13.5vw 的粒子字标。 */
+.alt__title {
+  margin-top: 18px;
+  font-size: clamp(30px, 3.1vw, 56px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  /* ⚠️ 渐变字是 background-clip:text + color:transparent，
+     text-shadow 在这种字上压根不渲染 —— 落影只能用 drop-shadow。 */
+  filter: drop-shadow(0 10px 32px rgba(70, 4, 0, 0.5));
+}
+
+.alt__desc {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.85;
+  opacity: 0.86;
+}
+
+.alt__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  padding: 0 0 4px;
+  font: inherit;
+  font-size: 13.5px;
+  color: inherit;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  transition:
+    gap 0.4s var(--ease-out),
+    border-color 0.4s var(--ease);
+}
+.alt__more:hover {
+  gap: 15px;
+  border-color: #fff;
+}
+
+/* ── 8. 右下：联系表单 ─────────────────────────────────── */
+.alt__br {
+  position: absolute;
+  right: clamp(20px, 3vw, 54px);
+  bottom: clamp(58px, 6vw, 86px);
+  z-index: 6;
+  width: clamp(300px, 25vw, 386px);
+}
+
+.aform {
+  padding: 20px 22px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 12px;
+  background: rgba(16, 3, 1, 0.52);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    0 30px 80px -34px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+.aform__k {
+  display: block;
+  font-size: 9.5px !important;
+  letter-spacing: 0.26em !important;
+  color: rgba(255, 255, 255, 0.62);
+  margin-bottom: 10px;
+}
+
+.aform__row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  transition: border-color 0.4s var(--ease);
+}
+.aform__row:focus-within {
+  border-bottom-color: #fff;
+}
+
+.aform__row > span {
+  font-size: 9.5px !important;
+  letter-spacing: 0.18em !important;
+  color: rgba(255, 255, 255, 0.6);
+}
+.aform__row:focus-within > span {
+  color: #fff;
+}
+
+.aform__row input {
+  width: 100%;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+}
+.aform__row input:focus {
+  outline: none;
+}
+.aform__row input::placeholder {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+/* 白底黑字按钮 —— 整屏最强的一组对比 */
+.aform__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  margin-top: 18px;
+  border-radius: 8px;
+  background: #fff;
+  color: #1a0300;
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    background 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+.aform__btn:hover {
+  background: #ffe9d6;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.8);
+}
+.aform__btn svg {
+  transition: transform 0.45s var(--ease-out);
+}
+.aform__btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ── 9. 收尾：首屏底部压一道暗边，接住下面深色的模块 ──── */
+.alt::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  z-index: 7;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(30, 3, 0, 0.55) 70%, rgba(18, 2, 0, 0.85));
+  border-bottom: 1px solid var(--line);
+}
+
+/* ── 10. 首屏是橙红海报时，全局导航要跟着变一下 ──────────
+   青铜色的按钮和文字压在橙红上会发闷、发脏。
+   只在「导航还没吸顶」（= 首屏还没滚过去）时生效，滚下去后自动还原，
+   所以其他模块的观感完全不受影响。 */
+body:has(.alt) .nav:not(.is-solid) .nav__cta {
+  background: #fff;
+  color: #1a0300;
+  box-shadow: none;
+}
+body:has(.alt) .nav:not(.is-solid) .nav__cta:hover {
+  background: #ffe9d6;
+  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 0.6);
+}
+body:has(.alt) .nav:not(.is-solid) .nav__mark {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+body:has(.alt) .nav:not(.is-solid) .nav__names i {
+  color: rgba(255, 255, 255, 0.7);
+}
+body:has(.alt) .nav:not(.is-solid) .nav__link span {
+  color: rgba(255, 255, 255, 0.88);
+}
+body:has(.alt) .nav:not(.is-solid) .nav__link:hover span,
+body:has(.alt) .nav:not(.is-solid) .nav__link.is-active span {
+  color: #fff;
+}
+body:has(.alt) .nav:not(.is-solid) .nav__link em {
+  color: rgba(255, 255, 255, 0.55);
+}
+body:has(.alt) .nav:not(.is-solid) .nav__link::after {
+  background: #fff;
+}
+
+/* ── 窄屏兜底 ──────────────────────────────────────────── */
+@media (max-width: 1180px) {
+  .alt__mark {
+    height: clamp(240px, 26vw, 330px);
+  }
+  .alt__rings {
+    width: 94vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .alt__rings,
+  .alt__meta {
+    display: none;
+  }
+  .alt__center {
+    top: 38%;
+  }
+  .alt__bl,
+  .alt__br {
+    position: static;
+    max-width: none;
+    width: auto;
+    margin-inline: clamp(20px, 3vw, 54px);
+  }
+  .alt {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 28px;
+    padding-top: 34vh;
+    padding-bottom: 40px;
+  }
+  .alt__center {
+    position: static;
+    transform: none;
+  }
+}
+
+/* ── 手机：首屏的等宽小字提到可读下限 ───────────────────────
+   这几处原本是 9.5px / 10px 的字（分栏说明、小节眉题、表单字段名），
+   都带 !important —— 这里必须同样带，否则覆盖不过去。
+   它们是首屏和表单里真正需要读的文字，不是装饰，
+   9.5px 在手机上已经低于可读下限了。 */
+@media (max-width: 760px) {
+  .alt__rule-text {
+    font-size: 11.5px !important;
+    letter-spacing: 0.12em !important;
+  }
+  .alt__kicker {
+    font-size: 12px !important;
+    letter-spacing: 0.16em !important;
+  }
+  .aform__k {
+    font-size: 11.5px !important;
+    letter-spacing: 0.18em !important;
+  }
+  .aform__row > span {
+    font-size: 11.5px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  /* 「查看档期」原本只有 28px 高，是个明显的细链接。
+     手机上补足触控高度，同时保持它作为次级入口的克制感。 */
+  .alt__more {
+    min-height: 44px;
+    align-items: center;
+    padding-top: 6px;
+  }
+}

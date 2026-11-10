@@ -1,0 +1,470 @@
+/* ══════════════════════════════════════════════════════════════
+   设计系统 · 暗色 / 高级 / 克制 / 科技感
+   规则：只有一种强调色（青铜），其余全部靠层次、留白和 1px 细线。
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* 让浏览器原生控件（下拉面板、日期选择器、滚动条）也走暗色，
+     否则 select 弹出来是一块白的 */
+  color-scheme: dark;
+
+  /* 底色：冷调近黑 —— 比纯黑多一点点蓝，屏幕上有层次而不发灰 */
+  --bg: #08090b;
+  --bg-soft: #0b0d10;
+  --bg-raise: #101318;
+  --bg-glass: rgba(8, 9, 11, 0.72);
+
+  /* 细线：整站的分隔全靠它们 */
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --line-3: rgba(255, 255, 255, 0.24);
+
+  /* 文字 */
+  --text: #edeff3;
+  --text-2: #99a1ad;
+  --text-3: #616874;
+
+  /* 唯一强调色：青铜。占比控制在整屏 2% 以内 */
+  --accent: #c9a87c;
+  --accent-hi: #ddc09a;
+  --accent-soft: rgba(201, 168, 124, 0.12);
+  --accent-line: rgba(201, 168, 124, 0.42);
+
+  /* 版心：1700px（内容区，不含左右留白） */
+  --container: 1700px;
+  --gutter: clamp(24px, 4.2vw, 76px);
+  --section-y: clamp(104px, 11vw, 184px);
+
+  /* 锚点落位：固定顶部栏 76px + 16px 呼吸。
+     所有可跳转模块的 scroll-margin-top 都取这个值 —— 之前是散的
+     （基础 84px、关于我 94px、预约 0），预约那条会让顶部栏直接压住标题。 */
+  --anchor-offset: 92px;
+
+  --r-sm: 3px;
+  --r-md: 6px;
+  --r-lg: 12px;
+
+  /* 缓动 */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── z-index 层级刻度 ──────────────────────────────────
+     此前全站的层级是散落的裸数字（0/1/2/3/90/100/120/200），改一层得
+     满仓库翻。这里收敛成一套刻度：前四档给组件内部用，后面几档是
+     跨组件的全局层。
+     注：首屏（AltStudio.css）内部另有 0–7 的局部层级，那是它自己的
+     层叠上下文，刻意不并进这套全局刻度。 */
+  --z-base: 0; /* 背景装饰：section 底纹、卡片底 */
+  --z-raised: 1; /* 高于装饰的内容 */
+  --z-float: 2; /* 卡片内需要浮起的元素 */
+  --z-click: 3; /* 点击热区（拉伸链接），须压过同组装饰 */
+  --z-grain: 90; /* 全局胶片颗粒 */
+  --z-toc: 95; /* 右侧页内目录：与导航同属「界面层」，要在颗粒之上、弹窗之下 */
+  --z-nav: 100; /* 顶部导航 */
+  --z-progress: 120; /* 滚动进度条（压住导航） */
+  --z-modal: 200; /* 弹窗 */
+  --z-skip: 220; /* 跳过链接：任何情况下都要能聚焦到 */
+
+  --sans: 'Inter Variable', 'Noto Sans SC Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Microsoft YaHei UI', 'PingFang SC', sans-serif;
+  --mono: ui-monospace, 'Cascadia Mono', 'SFMono-Regular', 'JetBrains Mono', Consolas,
+    'Liberation Mono', monospace;
+}
+
+/* ── Reset ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--accent);
+  color: #0a0b0d;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* 滚动条也纳入设计 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #1d2128;
+  border: 2px solid var(--bg);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2b313a;
+}
+
+/* ── 版心与节奏 ────────────────────────────────────────── */
+.container {
+  width: min(100% - (var(--gutter) * 2), var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-y);
+  position: relative;
+  scroll-margin-top: var(--anchor-offset);
+}
+
+.section--line {
+  border-top: 1px solid var(--line);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--line);
+  width: 100%;
+}
+
+/* ── 通用文字件 ────────────────────────────────────────── */
+.mono {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ── 章节头 ────────────────────────────────────────────── */
+.sec-head {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.sec-head__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.sec-head__idx {
+  color: var(--accent);
+}
+.sec-head__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.sec-head__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 88px);
+  align-items: end;
+}
+
+.sec-head__title {
+  font-size: clamp(32px, 3.5vw, 58px);
+  letter-spacing: -0.025em;
+  max-width: 22ch;
+}
+
+.sec-head__desc {
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: var(--text-2);
+  max-width: 46ch;
+  padding-bottom: 6px;
+}
+
+/* ── 按钮 ──────────────────────────────────────────────── */
+.btn {
+  --h: 52px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: var(--h);
+  padding: 0 26px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    background 0.45s var(--ease),
+    border-color 0.45s var(--ease),
+    color 0.45s var(--ease),
+    transform 0.45s var(--ease),
+    box-shadow 0.45s var(--ease);
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #0a0b0d;
+  box-shadow: 0 0 0 0 rgba(201, 168, 124, 0);
+}
+.btn--primary:hover {
+  background: var(--accent-hi);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px -14px rgba(201, 168, 124, 0.55);
+}
+
+.btn--ghost {
+  border-color: var(--line-2);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(6px);
+}
+.btn--ghost:hover {
+  border-color: var(--line-3);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.btn--sm {
+  --h: 42px;
+  padding: 0 20px;
+  font-size: 13px;
+}
+
+.btn__arrow {
+  transition: transform 0.45s var(--ease-out);
+}
+.btn:hover .btn__arrow {
+  transform: translateX(4px);
+}
+
+/* ── 按下反馈 ──────────────────────────────────────────── */
+/* 此前全站有 50 处 :hover、却是 0 处 :active —— 鼠标按下去毫无反应，按钮摸起来是「虚」的。
+   这里刻意没有用 `a:active, button:active` 这种全局选择器：.reveal 包装层和 3D 轮播
+   都用 transform 做定位，无差别覆盖会把它们打乱。所以按类精确列举。
+   90ms 也是刻意的 —— 按下反馈必须比 hover（0.35–0.6s）快得多才跟手。 */
+.btn:active,
+.nav__brand:active,
+.nav__link:active,
+.nav__lang:active,
+.works__foot-link:active,
+.plans__cta:active,
+.about__contact a:active,
+.channel__value:active,
+.booking__top:active,
+.wxcard:active,
+.wq__close:active,
+.alt__more:active,
+.aform__btn:active {
+  transform: translateY(1px) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ── 滚动进场 ──────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 0.9s var(--ease-out) var(--d, 0ms),
+    transform 1.15s var(--ease-out) var(--d, 0ms);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── 全局颗粒 ──────────────────────────────────────────── */
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 6s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3%, 2%);
+  }
+  40% {
+    transform: translate(2%, -3%);
+  }
+  60% {
+    transform: translate(-2%, -2%);
+  }
+  80% {
+    transform: translate(3%, 1%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ── 顶部滚动进度 ──────────────────────────────────────── */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  z-index: var(--z-progress);
+  background: linear-gradient(90deg, rgba(201, 168, 124, 0.15), var(--accent));
+  transform-origin: 0 50%;
+  transition: transform 0.12s linear;
+}
+
+/* ── 无障碍 ────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 「跳到主要内容」：键盘用户 Tab 的第一站。
+   用 transform 移出视口而不是 display:none —— 后者会让它无法被聚焦，
+   等于白装。聚焦时滑回来，保持高对比可读。 */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: var(--z-skip);
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: #0a0b0d;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transform: translateY(-180%);
+  transition: transform 0.25s var(--ease-out);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .grain {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── 窄屏兜底（主要面向 PC，这里只保证不塌） ───────────── */
+@media (max-width: 1080px) {
+  .sec-head__body {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 22px;
+  }
+}
+
+/* ── 手机：章节头的等宽小字提到可读下限 ───────────────────
+   11px + 0.22em 字距在桌面宽屏上是克制的「编号感」；
+   手机上单列铺开、这一行只剩编号和标题，同样字号显得更小更虚。
+   抬到 12px 并收紧字距，保住层级但先保证读得清。 */
+@media (max-width: 760px) {
+  .sec-head__meta {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    gap: 12px;
+  }
+}

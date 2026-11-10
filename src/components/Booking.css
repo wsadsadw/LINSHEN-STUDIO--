@@ -1,0 +1,497 @@
+/* 整屏收尾：预约模块。沿用之前的收尾语言（光晕 + 细线网格 + 描边大字），
+   中间换成一块真正能填的预约表单。 */
+.booking {
+  position: relative;
+  /* 不再独占一屏。原来这里是 min-height: 100vh / 100svh，
+     这一节就无论内容多少都撑满整屏，比「服务套餐」那节高出一大截。
+     用户要的是「和套餐板块一样」——套餐走的是 .section 的自然高度，这里对齐它。
+     （参考站 5275 的 editorial.css 也正是把这里改成了 min-height: auto。） */
+  min-height: auto;
+  display: flex;
+  overflow: hidden;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  /* 顶部栏 76px 会盖住锚点落位，这里必须留出偏移。
+     原先这里是 0 —— 那时预约还是 min-height:100vh 的整屏收尾块，贴顶合理；
+     改成普通高度后就成了缺陷：点「预约」跳过来，标题会被导航栏压住。 */
+  scroll-margin-top: var(--anchor-offset);
+}
+
+.booking__glow {
+  position: absolute;
+  left: 50%;
+  bottom: -34%;
+  width: 130%;
+  height: 90%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    closest-side,
+    rgba(201, 168, 124, 0.16),
+    rgba(201, 168, 124, 0.05) 46%,
+    transparent 74%
+  );
+  pointer-events: none;
+}
+
+.booking__columns {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+  mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 74%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 74%, transparent);
+}
+.booking__columns::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: min(100% - (var(--gutter) * 2), var(--container));
+  margin-inline: auto;
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+  background-size: calc(100% / 6) 100%;
+  box-shadow: inset -1px 0 0 var(--line);
+}
+
+.booking__inner {
+  position: relative;
+  z-index: var(--z-float);
+  /* ⚠️ 必须是 flex: none，不能是 flex: 1 —— 这是「两边没留白」的根因。
+     这一节是 display:flex 的横向容器，而 .booking__inner 同时又带着 .container 类。
+     flex: 1 的 flex-basis 是 0，flex-grow 会在 auto margin 之前把自由空间吃光，
+     于是 .container 的 width: min(100% - 两侧 gutter, --container) 被撑满到整屏宽，
+     左右留白归零。改成 flex: none 后按 width 取值，再由 margin-inline: auto 居中，
+     两侧各留出一个 gutter —— 和「服务套餐」那节的版心宽度完全一致。 */
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 3.6vw, 60px);
+  padding-block: clamp(96px, 9vw, 132px) 40px;
+}
+
+/* ── 标题 + 微信入口 ───────────────────────────────────── */
+.booking__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  gap: clamp(30px, 4vw, 90px);
+  align-items: end;
+}
+
+.booking__title {
+  font-size: clamp(40px, 5.4vw, 96px);
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.035em;
+}
+.booking__title .dtitle__line.is-accent {
+  padding-left: 0.1em;
+}
+
+.booking__desc {
+  margin-top: 26px;
+  font-size: 15.5px;
+  line-height: 1.95;
+  color: var(--text-2);
+  max-width: 46ch;
+}
+
+.booking__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 6px;
+}
+
+/* 微信入口卡片：整块可点，点开二维码弹窗 */
+.wxcard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 24px;
+  text-align: left;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  background: linear-gradient(120deg, rgba(201, 168, 124, 0.07), rgba(255, 255, 255, 0.015) 58%);
+  transition:
+    border-color 0.45s var(--ease),
+    background 0.45s var(--ease),
+    transform 0.45s var(--ease);
+}
+.wxcard:hover {
+  border-color: var(--accent-line);
+  background: linear-gradient(120deg, rgba(201, 168, 124, 0.14), rgba(255, 255, 255, 0.02) 62%);
+  transform: translateY(-2px);
+}
+
+.wxcard__icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
+  background: rgba(201, 168, 124, 0.08);
+}
+
+.wxcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.wxcard__body b {
+  font-size: 16.5px;
+  font-weight: 500;
+}
+.wxcard__body i {
+  font-style: normal;
+  font-size: 11px !important;
+  letter-spacing: 0.14em !important;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wxcard__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  font-size: 10px !important;
+  letter-spacing: 0.18em !important;
+  color: var(--accent);
+}
+.wxcard__action svg {
+  transition: transform 0.45s var(--ease-out);
+}
+.wxcard:hover .wxcard__action svg {
+  transform: translateX(4px);
+}
+
+.booking__hours {
+  color: var(--text-3);
+  font-size: 10.5px !important;
+  letter-spacing: 0.14em !important;
+  line-height: 1.9;
+}
+
+/* ── 表单 ─────────────────────────────────────────────── */
+.bform__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 2.5vw, 46px) clamp(24px, 2.8vw, 56px);
+  padding-top: 8px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.field__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px !important;
+  letter-spacing: 0.2em !important;
+  color: var(--text-3);
+  transition: color 0.4s var(--ease);
+}
+.field__label em {
+  font-style: normal;
+  color: var(--accent);
+}
+.field:focus-within .field__label {
+  color: var(--accent);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 8px 0 11px;
+  border: 0;
+  border-bottom: 1px solid var(--line-2);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15.5px;
+  line-height: 1.5;
+  transition: border-color 0.4s var(--ease);
+}
+.field textarea {
+  min-height: 92px;
+  line-height: 1.75;
+  resize: vertical;
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #4b525d;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+/* 下拉与日期控件在暗色下要显式声明，否则弹出的面板是白的 */
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 24px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2399a1ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+}
+.field select option {
+  background: #12141a;
+  color: var(--text);
+}
+.field input[type='date'] {
+  color-scheme: dark;
+}
+.field input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0.45;
+  cursor: pointer;
+}
+.field input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.field.has-error input,
+.field.has-error textarea {
+  border-bottom-color: #d9736b;
+}
+.field__err {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d9736b;
+}
+
+.field--wide {
+  grid-column: 1 / -1;
+}
+
+/* 第二行第三格留给一句提示，免得空一格 */
+.bform__aside {
+  align-self: end;
+  padding-bottom: 12px;
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--text-3);
+}
+
+.bform__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(30px, 3vw, 46px);
+}
+.bform__submit {
+  --h: 58px;
+  padding-inline: 32px;
+  font-size: 15px;
+}
+
+.bform__note {
+  margin-top: 16px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--text-3);
+  max-width: 78ch;
+  transition: color 0.5s var(--ease);
+}
+.bform__note.is-sent {
+  color: var(--accent);
+}
+
+/* ── 联系方式 ─────────────────────────────────────────── */
+.booking__channels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.channel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 26px 28px 28px;
+  transition: background 0.6s var(--ease);
+}
+.channel + .channel {
+  border-left: 1px solid var(--line);
+}
+.channel:hover {
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.channel__k {
+  color: var(--accent);
+  font-size: 10px !important;
+  letter-spacing: 0.24em !important;
+}
+
+.channel__label {
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+
+.channel__value {
+  font-size: 16px;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  word-break: break-all;
+  text-align: left;
+  transition: color 0.5s var(--ease);
+}
+a.channel__value {
+  border-bottom: 1px solid transparent;
+}
+a.channel__value:hover,
+.channel__value--btn:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent-line);
+}
+.channel__value--btn {
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ── 页脚 ─────────────────────────────────────────────── */
+.booking__foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.booking__foot-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: var(--text-3);
+}
+
+.booking__top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+  transition:
+    color 0.4s var(--ease),
+    gap 0.4s var(--ease-out);
+}
+.booking__top:hover {
+  color: var(--accent);
+  gap: 13px;
+}
+
+.booking__disclaimer {
+  color: var(--text-3);
+  opacity: 0.66;
+  font-size: 10px !important;
+  letter-spacing: 0.12em !important;
+}
+
+/* ── 底部描边大字 ─────────────────────────────────────── */
+.booking__watermark {
+  position: absolute;
+  left: 50%;
+  bottom: -0.16em;
+  transform: translateX(-50%);
+  z-index: var(--z-raised);
+  font-size: clamp(76px, 15vw, 268px);
+  font-weight: 700;
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.055);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 1180px) {
+  .bform__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bform__aside {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 1080px) {
+  .booking__main {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .booking__channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .channel:nth-child(odd) {
+    border-left: 0;
+  }
+  .channel:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 760px) {
+  .bform__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 表单字段名 10px→12px：这是用户在填表时逐项要读的标签，
+     不是装饰性小字，手机上必须一眼认得出来。
+     同时也把「怎么称呼你」「手机号或微信号」这些必填项标清楚。 */
+  .field__label {
+    font-size: 12px !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  /* 联系方式眉题 PHONE / EMAIL / WECHAT 10px→11.5px */
+  .channel__k {
+    font-size: 11.5px !important;
+    letter-spacing: 0.16em !important;
+  }
+
+  /* 接待时间 10.5px→12px：这是访客真正关心的信息，别让它缩成脚注 */
+  .booking__hours {
+    font-size: 12px !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  /* 「查看二维码」10px→11.5px，并补足触控高度 */
+  .wxcard__action {
+    font-size: 11.5px !important;
+    letter-spacing: 0.12em !important;
+    min-height: 44px;
+  }
+
+  /* 页脚版权与备案号 11px→12px */
+  .booking__foot-row {
+    font-size: 12px;
+  }
+  /* 演示声明 10px→11.5px */
+  .booking__disclaimer {
+    font-size: 11.5px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  /* 「回到顶部」是页脚唯一的行动入口，补足触控高度 */
+  .booking__top {
+    font-size: 12px;
+    min-height: 44px;
+  }
+}
