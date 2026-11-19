@@ -100,35 +100,33 @@ export const studio = {
 
 /* ── 首屏：环绕字标的一圈照片 ───────────────────────────── */
 /**
- * 现在这 12 张是本机 ComfyUI（Realistic Vision V6）生成的 768×768 WebP，
- * 放在 public/images/reel/r-01..12.webp。
+ * 现在这 12 张是【真实作品】：从桌面「照片」文件夹导入的 768×768 WebP，
+ * 放在 public/images/reel/r-01..12.webp。导入脚本见 tools/import-desktop-photos.py。
  *
- * 口径（三轮调整后的结果，别随手改回去）：
- *   1. 主题只取【细节 / 静物 / 场景 / 光影】，不含人物 —— 高端摄影站常用这种
- *      素材占线圈，比人像更耐看，也不会和「拍摄系列」里的人像卡片打架。
- *   2. 生成时就写「冷调（青灰/墨绿）+ 暖暗部」的描述词。
- *   3. 生成后统一过一遍后处理（分离调色 + 暗角 + 降饱和 + 压暗），
+ * 口径（别随手改回去）：
+ *   1. 导出前统一过一遍后处理（分离调色 + 暗角 + 降饱和 + 压暗），
  *      让暗部烧进暖棕红、边缘收到近黑 —— 目的是和首屏那层橙红 radial
- *      渐变在明度上连成一片，图才不像「贴上去的」。脚本见
- *      tools/grade-reel.py，改动后重跑即可。
+ *      渐变在明度上连成一片，图才不像「贴上去的」。
+ *      这套调色参数在 tools/import-desktop-photos.py 里，与 tools/grade-reel.py 一致。
+ *   2. 换图时同名覆盖 public/images/reel/r-01..12.webp 即可，alt 请同步改成
+ *      「谁、在哪、在做什么」的具体描述 —— 现在写的是中性占位文案，
+ *      因为导入时没有识图能力，不知道每张拍的是什么。
  *
- * ⚠️ 这些仍是 AI 生成的占位素材，不是你的真实作品。
- *    换成你自己的：同名覆盖 public/images/reel/r-01..12.webp，再改下面的 alt。
  * 数量随意：12 张这个环比较饱满，少于 8 张会显得稀稀拉拉。
  */
 export const heroReel = [
-  { src: '/images/reel/r-01.webp', alt: '婚礼细节：两枚婚戒静置于深色丝绒上，冷调金属反光' },
-  { src: '/images/reel/r-02.webp', alt: '婚纱细节：白色蕾丝面料在冷光下的纹理与褶皱' },
-  { src: '/images/reel/r-03.webp', alt: '静物：干花与尤加利叶手捧，置于深色石面' },
-  { src: '/images/reel/r-04.webp', alt: '静物：亚光压印请柬与火漆印的平铺摆拍' },
-  { src: '/images/reel/r-05.webp', alt: '场景：空教堂里的木质长椅与斜射进来的光柱' },
-  { src: '/images/reel/r-06.webp', alt: '建筑细节：彩色玻璃窗透出的冷蓝光落在石墙上' },
-  { src: '/images/reel/r-07.webp', alt: '静物：暗色宴会厅里的香槟塔，银光与烛光交叠' },
-  { src: '/images/reel/r-08.webp', alt: '静物：深色毛毯上的一双象牙色婚鞋' },
-  { src: '/images/reel/r-09.webp', alt: '静物：白纱搭在旧木椅上，布料自然垂坠' },
-  { src: '/images/reel/r-10.webp', alt: '静物：暗色石面上的细蜡烛与旧银器' },
-  { src: '/images/reel/r-11.webp', alt: '氛围：雨夜的窗玻璃与外散景冷蓝灯光' },
-  { src: '/images/reel/r-12.webp', alt: '建筑：老建筑石门廊，一道斜光扫过墙面' },
+  { src: '/images/reel/r-01.webp', alt: 'LINSHEN.STUDIO 摄影作品 01' },
+  { src: '/images/reel/r-02.webp', alt: 'LINSHEN.STUDIO 摄影作品 02' },
+  { src: '/images/reel/r-03.webp', alt: 'LINSHEN.STUDIO 摄影作品 03' },
+  { src: '/images/reel/r-04.webp', alt: 'LINSHEN.STUDIO 摄影作品 04' },
+  { src: '/images/reel/r-05.webp', alt: 'LINSHEN.STUDIO 摄影作品 05' },
+  { src: '/images/reel/r-06.webp', alt: 'LINSHEN.STUDIO 摄影作品 06' },
+  { src: '/images/reel/r-07.webp', alt: 'LINSHEN.STUDIO 摄影作品 07' },
+  { src: '/images/reel/r-08.webp', alt: 'LINSHEN.STUDIO 摄影作品 08' },
+  { src: '/images/reel/r-09.webp', alt: 'LINSHEN.STUDIO 摄影作品 09' },
+  { src: '/images/reel/r-10.webp', alt: 'LINSHEN.STUDIO 摄影作品 10' },
+  { src: '/images/reel/r-11.webp', alt: 'LINSHEN.STUDIO 摄影作品 11' },
+  { src: '/images/reel/r-12.webp', alt: 'LINSHEN.STUDIO 摄影作品 12' },
 ]
 
 /* ── 02 · 个人经历 ──────────────────────────────────────── */
@@ -242,7 +240,7 @@ export const works = {
       image: '/images/work-01.jpg',
       focal: 'center 42%',
       note: '全天跟拍 · 自然光 · 零补光',
-      alt: '婚礼纪实：一对新人在树林中并肩站立的黑白合影',
+      alt: '精选项目 01 · LINSHEN.STUDIO 摄影作品',
     },
     {
       id: 'w2',
@@ -254,7 +252,7 @@ export const works = {
       image: '/images/work-02.jpg',
       focal: 'center 32%',
       note: '抓拍 · 黑白胶片调',
-      alt: '婚礼纪实：新娘坐在车内微笑，新郎站在半开的车门外',
+      alt: '精选项目 02 · LINSHEN.STUDIO 摄影作品',
     },
     {
       id: 'w3',
@@ -266,7 +264,7 @@ export const works = {
       image: '/images/work-03.jpg',
       focal: 'center 34%',
       note: '教堂仪式 · 现场光 · 双机位',
-      alt: '婚礼纪实：教堂内逆光下相拥的新人，地面是黑白几何花砖',
+      alt: '精选项目 03 · LINSHEN.STUDIO 摄影作品',
     },
     {
       id: 'w4',
@@ -278,7 +276,7 @@ export const works = {
       image: '/images/work-04.jpg',
       focal: 'center 48%',
       note: '微距特写 · 手工精修',
-      alt: '婚礼细节特写：两只交握的手，手背绘有海娜纹样并戴有金饰',
+      alt: '精选项目 04 · LINSHEN.STUDIO 摄影作品',
     },
   ],
 }

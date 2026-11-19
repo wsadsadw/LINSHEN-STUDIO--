@@ -56,18 +56,18 @@ const enStudio = {
 }
 
 const EN_REEL_ALTS = [
-  'Wedding detail: two rings resting on dark velvet, cool metal highlights',
-  'Wedding detail: white lace fabric, texture and folds under cool light',
-  'Still life: dried flowers and eucalyptus bouquet on a dark stone surface',
-  'Still life: matte letterpress invitation flat lay with a wax seal',
-  'Scene: empty church interior, wooden pews and shafts of daylight',
-  'Architectural detail: cool blue light from a stained glass window on stone',
-  'Still life: a champagne tower in a dark reception hall, silver and candlelight',
-  'Still life: a pair of ivory wedding shoes on a dark rug',
-  'Still life: white tulle veil draped over an old wooden chair',
-  'Still life: thin candles and tarnished silverware on dark slate',
-  'Mood: rain on a dark window with cool out-of-focus city lights',
-  'Architecture: an old stone doorway with a hard diagonal shaft of daylight',
+  'LINSHEN.STUDIO photography work 01',
+  'LINSHEN.STUDIO photography work 02',
+  'LINSHEN.STUDIO photography work 03',
+  'LINSHEN.STUDIO photography work 04',
+  'LINSHEN.STUDIO photography work 05',
+  'LINSHEN.STUDIO photography work 06',
+  'LINSHEN.STUDIO photography work 07',
+  'LINSHEN.STUDIO photography work 08',
+  'LINSHEN.STUDIO photography work 09',
+  'LINSHEN.STUDIO photography work 10',
+  'LINSHEN.STUDIO photography work 11',
+  'LINSHEN.STUDIO photography work 12',
 ]
 
 const enHeroReel = zhHeroReel.map((item, index) => ({
@@ -188,10 +188,10 @@ const enWorks = {
     { src: '/images/dome/dome-40.webp', alt: 'A portrait in a warm library loft' },
   ],
   items: [
-    { ...zhWorks.items[0], title: 'A Ceremony in the Woods', category: 'Documentary wedding', place: 'Hangzhou · Qiandao Lake', note: 'Full-day coverage · natural light · no flash', alt: 'A couple standing side by side in a forest after their wedding ceremony' },
-    { ...zhWorks.items[1], title: 'Ten Minutes Before Leaving', category: 'Documentary photography', place: 'Nanchang · Old Town', note: 'Candid moments · black-and-white film look', alt: 'A bride smiling inside a car while the groom waits outside the open door' },
-    { ...zhWorks.items[2], title: 'Vows by Candlelight', category: 'Documentary wedding', place: 'Shanghai · Xuhui', note: 'Church ceremony · available light · two cameras', alt: 'A newlywed couple embracing in a church with geometric black-and-white tiles' },
-    { ...zhWorks.items[3], title: 'Patterns in the Palm', category: 'Detail & portrait', place: 'Shenzhen · Nanshan', note: 'Macro detail · hand retouching', alt: 'Two hands holding each other, decorated with henna patterns and gold jewelry' },
+    { ...zhWorks.items[0], title: 'A Ceremony in the Woods', category: 'Documentary wedding', place: 'Hangzhou · Qiandao Lake', note: 'Full-day coverage · natural light · no flash', alt: 'Selected work 01 · LINSHEN.STUDIO photography' },
+    { ...zhWorks.items[1], title: 'Ten Minutes Before Leaving', category: 'Documentary photography', place: 'Nanchang · Old Town', note: 'Candid moments · black-and-white film look', alt: 'Selected work 02 · LINSHEN.STUDIO photography' },
+    { ...zhWorks.items[2], title: 'Vows by Candlelight', category: 'Documentary wedding', place: 'Shanghai · Xuhui', note: 'Church ceremony · available light · two cameras', alt: 'Selected work 03 · LINSHEN.STUDIO photography' },
+    { ...zhWorks.items[3], title: 'Patterns in the Palm', category: 'Detail & portrait', place: 'Shenzhen · Nanshan', note: 'Macro detail · hand retouching', alt: 'Selected work 04 · LINSHEN.STUDIO photography' },
   ],
 }
 
