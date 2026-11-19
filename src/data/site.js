@@ -175,59 +175,61 @@ export const works = {
   /**
    * 球面画廊（DomeGallery）的照片源。
    *
-   * ⚠️ 与 segments 严格联动：buildItems() 按 segments 列 × 5 行 生成格子，
-   *    segments=8 → 40 格。照片少于格子数时源码会用 `i % length` 循环复用，
-   *    也就是会出现重复。这里正好 40 张对 40 格，做到一张不重复。
+   * ⚠️ 与 segments 严格联动：buildItems() 按 segments 列 × 5 行 生成格子。
+   *    Works.jsx 实际传 segments=35 → 175 格；图池少于格位时源码用
+   *    `i % length` 循环铺满，所以每张图在球面上会重复出现约 4 次。
+   *    图池里的真实照片越多，重复带来的单调感越弱 —— 这里放全部 43 张。
    *
-   * 这 40 张由本机 ComfyUI + Realistic Vision V6 生成（768×1024），
-   * 再转成 512×683 的 WebP（合计约 1.5 MB）——DomeGallery 用普通 <img> 渲染
+   * 这 43 张是本人作品，由 tools/import-dome-photos.py 从原片批量裁成
+   * 512×683 的 WebP（3:4，合计约 0.7 MB）——DomeGallery 用普通 <img> 渲染
    * 全部格子、没有懒加载，所以体积必须压住。
-   * 生成与转换脚本见 tools/gen-dome-photos.mjs 与 tools/convert-dome-photos.mjs。
    *
-   * 换成真实作品时：把照片按 dome-01..40 命名放进 public/images/dome/ 即可，
-   * 只需同步下面的 alt 文字。
+   * 换图：照片放桌面「照片」文件夹，重跑该脚本并同步下面的 alt 即可。
    */
   gallery: [
-    { src: '/images/dome/dome-01.webp', alt: '婚礼纪实：树林中逆光而立的新娘，含笑' },
-    { src: '/images/dome/dome-02.webp', alt: '婚礼纪实：教堂烛光下的仪式，新人牵手相视' },
-    { src: '/images/dome/dome-03.webp', alt: '婚礼细节：双手交换婚戒的瞬间' },
-    { src: '/images/dome/dome-04.webp', alt: '婚礼纪实：宾客向新人撒花庆祝' },
-    { src: '/images/dome/dome-05.webp', alt: '婚礼纪实：户外草坪上的宣誓仪式' },
-    { src: '/images/dome/dome-06.webp', alt: '婚礼纪实：新人在圣坛前的初吻' },
-    { src: '/images/dome/dome-07.webp', alt: '婚礼纪实：新人一起切婚礼蛋糕' },
-    { src: '/images/dome/dome-08.webp', alt: '婚礼纪实：新人的第一支舞' },
-    { src: '/images/dome/dome-09.webp', alt: '婚礼纪实：新娘抛出捧花，朋友们举手欢呼' },
-    { src: '/images/dome/dome-10.webp', alt: '婚礼纪实：宣读誓言时新娘手持手写信' },
-    { src: '/images/dome/dome-11.webp', alt: '人像：窗边柔和自然光下的女性肖像' },
-    { src: '/images/dome/dome-12.webp', alt: '人像：戴头纱的新娘单人肖像' },
-    { src: '/images/dome/dome-13.webp', alt: '人像：身着西装的新郎单人肖像' },
-    { src: '/images/dome/dome-14.webp', alt: '人像：情侣对视而笑的近景' },
-    { src: '/images/dome/dome-15.webp', alt: '人像：牵手微笑的老年夫妇' },
-    { src: '/images/dome/dome-16.webp', alt: '家庭纪实：家长将欢笑的孩子举高' },
-    { src: '/images/dome/dome-17.webp', alt: '人像：伴娘团在花园中欢笑合影' },
-    { src: '/images/dome/dome-18.webp', alt: '人像：侧脸轮廓上的柔和轮廓光' },
-    { src: '/images/dome/dome-19.webp', alt: '人像：女性回眸一笑的抓拍' },
-    { src: '/images/dome/dome-20.webp', alt: '人像：情侣相拥的近景特写' },
-    { src: '/images/dome/dome-21.webp', alt: '人像：开怀大笑的自然抓拍' },
-    { src: '/images/dome/dome-22.webp', alt: '人像：透过婚纱头纱拍摄的肖像' },
-    { src: '/images/dome/dome-23.webp', alt: '婚礼细节：新娘手捧花的近景' },
-    { src: '/images/dome/dome-24.webp', alt: '婚礼细节：婚戒静置于织物上的微距' },
-    { src: '/images/dome/dome-25.webp', alt: '婚礼细节：婚纱蕾丝与面料质感' },
-    { src: '/images/dome/dome-26.webp', alt: '婚礼细节：请柬与干花、火漆印的平铺摆拍' },
-    { src: '/images/dome/dome-27.webp', alt: '婚礼细节：婚鞋在软毯上的静物' },
-    { src: '/images/dome/dome-28.webp', alt: '婚礼纪实：父亲牵着女儿走过通道' },
-    { src: '/images/dome/dome-29.webp', alt: '婚礼纪实：新娘在镜前准备的清晨' },
-    { src: '/images/dome/dome-30.webp', alt: '婚礼纪实：晚宴上斟满的香槟塔' },
-    { src: '/images/dome/dome-31.webp', alt: '纪实：老城街道上牵手漫步的情侣' },
-    { src: '/images/dome/dome-32.webp', alt: '纪实：海边黄昏相拥欢笑的新人' },
-    { src: '/images/dome/dome-33.webp', alt: '纪实：金色麦田中并肩行走的情侣' },
-    { src: '/images/dome/dome-34.webp', alt: '人像：玻璃温室里漫射光下的肖像' },
-    { src: '/images/dome/dome-35.webp', alt: '纪实：黄昏时分湖边栈道上的散步' },
-    { src: '/images/dome/dome-36.webp', alt: '纪实：山顶日落中并肩远望的情侣' },
-    { src: '/images/dome/dome-37.webp', alt: '家庭纪实：老宅门廊上的午后时光' },
-    { src: '/images/dome/dome-38.webp', alt: '纪实：傍晚露台上共享静谧的情侣' },
-    { src: '/images/dome/dome-39.webp', alt: '人像：咖啡馆角落里的暖光肖像' },
-    { src: '/images/dome/dome-40.webp', alt: '人像：书店阁楼暖光下的肖像' },
+    { src: '/images/dome/dome-01.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 01' },
+    { src: '/images/dome/dome-02.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 02' },
+    { src: '/images/dome/dome-03.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 03' },
+    { src: '/images/dome/dome-04.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 04' },
+    { src: '/images/dome/dome-05.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 05' },
+    { src: '/images/dome/dome-06.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 06' },
+    { src: '/images/dome/dome-07.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 07' },
+    { src: '/images/dome/dome-08.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 08' },
+    { src: '/images/dome/dome-09.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 09' },
+    { src: '/images/dome/dome-10.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 10' },
+    { src: '/images/dome/dome-11.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 11' },
+    { src: '/images/dome/dome-12.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 12' },
+    { src: '/images/dome/dome-13.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 13' },
+    { src: '/images/dome/dome-14.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 14' },
+    { src: '/images/dome/dome-15.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 15' },
+    { src: '/images/dome/dome-16.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 16' },
+    { src: '/images/dome/dome-17.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 17' },
+    { src: '/images/dome/dome-18.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 18' },
+    { src: '/images/dome/dome-19.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 19' },
+    { src: '/images/dome/dome-20.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 20' },
+    { src: '/images/dome/dome-21.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 21' },
+    { src: '/images/dome/dome-22.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 22' },
+    { src: '/images/dome/dome-23.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 23' },
+    { src: '/images/dome/dome-24.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 24' },
+    { src: '/images/dome/dome-25.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 25' },
+    { src: '/images/dome/dome-26.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 26' },
+    { src: '/images/dome/dome-27.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 27' },
+    { src: '/images/dome/dome-28.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 28' },
+    { src: '/images/dome/dome-29.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 29' },
+    { src: '/images/dome/dome-30.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 30' },
+    { src: '/images/dome/dome-31.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 31' },
+    { src: '/images/dome/dome-32.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 32' },
+    { src: '/images/dome/dome-33.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 33' },
+    { src: '/images/dome/dome-34.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 34' },
+    { src: '/images/dome/dome-35.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 35' },
+    { src: '/images/dome/dome-36.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 36' },
+    { src: '/images/dome/dome-37.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 37' },
+    { src: '/images/dome/dome-38.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 38' },
+    { src: '/images/dome/dome-39.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 39' },
+    { src: '/images/dome/dome-40.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 40' },
+    { src: '/images/dome/dome-41.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 41' },
+    { src: '/images/dome/dome-42.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 42' },
+    { src: '/images/dome/dome-43.webp', alt: 'LINSHEN.STUDIO 摄影作品 · 穹顶 43' },
   ],
   items: [
     {
@@ -293,8 +295,9 @@ export const works = {
  * ⚠️ 每条的 meta 都是【服务口径】—— 客户会拿它来核对。交付周期、跟拍
  *    时长、机位数这些，上线前必须改成你真实做到的，不要为了显得专业
  *    写自己做不到的事。
- * ⚠️ 图片目前用的是 dome 系列占位图（与「精选项目」的 work-*.jpg 不重复）。
- *    换成真实作品时，保持 4:5 竖幅即可，CSS 用 aspect-ratio 裁切。
+ * ⚠️ 图片现在借用穹顶画廊的照片池（dome-28/11/16/24），已经从占位图换成
+ *    真实作品，但**画面对不上这四个品类** —— 需要按品类各挑一张替换。
+ *    保持 4:5 竖幅即可，CSS 用 aspect-ratio 裁切。
  */
 export const series = {
   index: '01',
@@ -309,7 +312,7 @@ export const series = {
       desc: '从清晨的准备到最后一场舞。不摆拍、不打断，只在真正发生的瞬间按下快门。',
       meta: '全天跟拍 · 双机位 · 先交小样再精修',
       image: '/images/dome/dome-28.webp',
-      alt: '婚礼纪实：父亲牵着女儿走过通道',
+      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 01',
       href: '#works',
     },
     {
@@ -319,7 +322,7 @@ export const series = {
       desc: '一次只拍一个人。用一两个小时把「上镜」这件事拆掉，留下你认得出自己的那张。',
       meta: '半日或全日 · 自然光为主 · 精修 20-40 张',
       image: '/images/dome/dome-11.webp',
-      alt: '人像：窗边柔和自然光下的女性肖像',
+      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 02',
       href: '#works',
     },
     {
@@ -329,7 +332,7 @@ export const series = {
       desc: '在孩子还愿意扑进你怀里的那几年。不布景、不换装，就在你家里拍。',
       meta: '到家里拍 · 2-3 小时 · 全家人不出镜也拍',
       image: '/images/dome/dome-16.webp',
-      alt: '家庭纪实：家长将欢笑的孩子举高',
+      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 03',
       href: '#works',
     },
     {
@@ -339,7 +342,7 @@ export const series = {
       desc: '给需要「看起来贵」的产品做视觉。光线、质感、留白，为你的详情页和主视觉服务。',
       meta: '棚拍或上门 · 按张计费 · 含商用授权',
       image: '/images/dome/dome-24.webp',
-      alt: '静物：婚戒静置于织物上的微距特写',
+      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 04',
       href: '#works',
     },
   ],
