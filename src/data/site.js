@@ -295,9 +295,10 @@ export const works = {
  * ⚠️ 每条的 meta 都是【服务口径】—— 客户会拿它来核对。交付周期、跟拍
  *    时长、机位数这些，上线前必须改成你真实做到的，不要为了显得专业
  *    写自己做不到的事。
- * ⚠️ 图片现在借用穹顶画廊的照片池（dome-28/11/16/24），已经从占位图换成
- *    真实作品，但**画面对不上这四个品类** —— 需要按品类各挑一张替换。
- *    保持 4:5 竖幅即可，CSS 用 aspect-ratio 裁切。
+ * ⚠️ 图片用的是 series-01..04.webp —— 这四张是从早期 dome 占位图里抽出来的
+ *    AI 素材，专供这一节使用，不再与穹顶画廊共用（共用会被换图波及）。
+ *    等有了对得上品类的真实作品，按 series-01..04 命名覆盖即可。
+ *    保持 4:5 竖幅，CSS 用 aspect-ratio 裁切。
  */
 export const series = {
   index: '01',
@@ -311,8 +312,8 @@ export const series = {
       title: '婚礼纪实',
       desc: '从清晨的准备到最后一场舞。不摆拍、不打断，只在真正发生的瞬间按下快门。',
       meta: '全天跟拍 · 双机位 · 先交小样再精修',
-      image: '/images/dome/dome-28.webp',
-      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 01',
+      image: '/images/series/series-01.webp',
+      alt: '婚礼纪实：父亲牵着女儿走过通道',
       href: '#works',
     },
     {
@@ -321,8 +322,8 @@ export const series = {
       title: '人像写真',
       desc: '一次只拍一个人。用一两个小时把「上镜」这件事拆掉，留下你认得出自己的那张。',
       meta: '半日或全日 · 自然光为主 · 精修 20-40 张',
-      image: '/images/dome/dome-11.webp',
-      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 02',
+      image: '/images/series/series-02.webp',
+      alt: '人像：窗边柔和自然光下的女性肖像',
       href: '#works',
     },
     {
@@ -331,8 +332,8 @@ export const series = {
       title: '家庭纪实',
       desc: '在孩子还愿意扑进你怀里的那几年。不布景、不换装，就在你家里拍。',
       meta: '到家里拍 · 2-3 小时 · 全家人不出镜也拍',
-      image: '/images/dome/dome-16.webp',
-      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 03',
+      image: '/images/series/series-03.webp',
+      alt: '家庭纪实：家长将欢笑的孩子举高',
       href: '#works',
     },
     {
@@ -341,8 +342,8 @@ export const series = {
       title: '品牌与静物',
       desc: '给需要「看起来贵」的产品做视觉。光线、质感、留白，为你的详情页和主视觉服务。',
       meta: '棚拍或上门 · 按张计费 · 含商用授权',
-      image: '/images/dome/dome-24.webp',
-      alt: 'LINSHEN.STUDIO 摄影作品 · 系列 04',
+      image: '/images/series/series-04.webp',
+      alt: '静物：婚戒静置于织物上的微距特写',
       href: '#works',
     },
   ],
